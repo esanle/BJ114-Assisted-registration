@@ -69,12 +69,15 @@ static QJsonObject fixtureAvailability(const QJsonObject &params, bool plan) {
      {QStringLiteral("uniqueProductTimeKey"), QString("T%1%2").arg(date).arg(i)},
      {QStringLiteral("dept1Code"), params.value(QStringLiteral("first_department_code")).toString()},
      {QStringLiteral("dept2Code"), department}, {QStringLiteral("dutyDate"), date}};
+   const bool waitlist = i == 2; // one demo row is in official "候补" state
    rows.append(QJsonObject{{QStringLiteral("date"), date}, {QStringLiteral("department_code"), department},
      {QStringLiteral("department_name"), QString::fromUtf8("演示科室")},
      {QStringLiteral("doctor_name"), doctors[i]}, {QStringLiteral("doctor_title"), QString::fromUtf8("主任医师")},
      {QStringLiteral("period"), i % 2 ? QString::fromUtf8("下午") : QString::fromUtf8("上午")},
-     {QStringLiteral("registration_fee"), 50.0}, {QStringLiteral("remaining"), 3 + ((seed + i) % 5)},
-     {QStringLiteral("status"), QString::fromUtf8("有号")},
+     {QStringLiteral("registration_fee"), 50.0},
+     {QStringLiteral("remaining"), waitlist ? QJsonValue(QJsonValue::Null) : QJsonValue(3 + ((seed + i) % 5))},
+     {QStringLiteral("status"), waitlist ? QString::fromUtf8("候补") : QString::fromUtf8("有号")},
+     {QStringLiteral("product_status"), waitlist ? 8 : 1},
      {QStringLiteral("queried_at"), QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs)},
      {QStringLiteral("booking_supported"), true}, {QStringLiteral("booking_payload"), route},
      {QStringLiteral("row_kind"), QStringLiteral("doctor_period")}});

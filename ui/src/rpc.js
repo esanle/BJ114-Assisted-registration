@@ -44,14 +44,18 @@ function mockCall(op, params = {}) {
       const first = params.first_department_code || '';
       const dept = params.department_code || '';
       const doctors = ['张医生', '李医生', '王医生'];
-      const rows = doctors.map((name, i) => ({
-        date, department_code: dept, department_name: '演示科室', doctor_name: name,
-        doctor_title: '主任医师', period: i % 2 ? '下午' : '上午', registration_fee: 50,
-        remaining: 3 + i, status: '有号', queried_at: new Date().toISOString(), booking_supported: true,
-        booking_payload: { hosCode: hospital, doctorCode: `fixture-${date}-${i}`,
-          uniqueProductKey: `P${date}${i}`, uniqueProductTimeKey: `T${date}${i}`,
-          dept1Code: first, dept2Code: dept, dutyDate: date }, row_kind: 'doctor_period'
-      }));
+      const rows = doctors.map((name, i) => {
+        const waitlist = i === 2;
+        return {
+          date, department_code: dept, department_name: '演示科室', doctor_name: name,
+          doctor_title: '主任医师', period: i % 2 ? '下午' : '上午', registration_fee: 50,
+          remaining: waitlist ? null : 3 + i, status: waitlist ? '候补' : '有号',
+          product_status: waitlist ? 8 : 1, queried_at: new Date().toISOString(), booking_supported: true,
+          booking_payload: { hosCode: hospital, doctorCode: `fixture-${date}-${i}`,
+            uniqueProductKey: `P${date}${i}`, uniqueProductTimeKey: `T${date}${i}`,
+            dept1Code: first, dept2Code: dept, dutyDate: date }, row_kind: 'doctor_period'
+        };
+      });
       return ok({ rows, message: '查询完成（演示数据）。' });
     }
     case 'booking_preview':
@@ -75,6 +79,28 @@ export const isElectron = () => Boolean(window.api?.call);
 export async function readProjectFile(rel) {
   if (window.api?.readFile) return window.api.readFile(rel);
   return null;
+}
+
+export async function openExternal(url) {
+  if (window.api?.openExternal) return window.api.openExternal(url);
+  window.open(url, '_blank');
+  return true;
+}
+
+// Mirror the legacy Window::officialWaitlistUrl rule: only official
+// "候补" (product_status == 8) rows get an official waitlist entry.
+export function officialWaitlistUrl(row) {
+  if (!row) return '';
+  const status = row.product_status;
+  if (row.booking_supported === false || (String(status) !== '8')) return '';
+  const route = row.booking_payload || {};
+  const codeOk = (v) => /^[A-Za-z0-9_-]{1,80}$/.test(v || '');
+  if (!codeOk(route.hosCode) || !codeOk(route.firstDeptCode) || !codeOk(route.secondDeptCode)) return '';
+  const q = new URLSearchParams({
+    hosCode: route.hosCode, dept1Code: route.firstDeptCode,
+    dept2Code: route.secondDeptCode, pathchannel: 'bjt'
+  });
+  return `https://www.114yygh.com/newhlwyl/mobile/appointmentRegister?${q}`;
 }
 
 // Minimal CSV parse (handles quoted fields), matching the project's simple format.

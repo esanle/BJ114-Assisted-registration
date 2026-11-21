@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { rpcCall } from './rpc.js';
+import { rpcCall, openExternal, officialWaitlistUrl } from './rpc.js';
 import { useStore } from './store.jsx';
 
 export default function BookingPage() {
@@ -11,7 +11,17 @@ export default function BookingPage() {
   const [order, setOrder] = useState(null);
   const patients = state.session.patients || [];
   const sel = state.selectedRow;
-  const canBook = state.session.logged_in && sel?.booking_payload && patient && !busy;
+  const isWaitlist = sel && String(sel.product_status) === '8';
+  const canBook = state.session.logged_in && sel?.booking_payload && patient && !busy && !isWaitlist;
+  const waitlistUrl = !state.stale ? officialWaitlistUrl(sel) : '';
+
+  const openWaitlist = async () => {
+    if (!waitlistUrl) return;
+    const ok = await openExternal(waitlistUrl);
+    setNotice(ok
+      ? { type: 'ok', text: `已打开官方候补入口。请在官方页面登录，选择 ${sel.date || ''} 的 ${sel.doctor_name || ''}，由官方核验候补额度并完成申请；以官方记录为准。` }
+      : { type: 'err', text: '未能打开浏览器，请在官方公众号选择该医院、科室、日期和医生办理候补。' });
+  };
 
   const preview = async () => {
     if (!sel?.booking_payload) { setNotice({ type: 'err', text: '请先在查询结果中选择一行号源。' }); return; }
@@ -79,7 +89,14 @@ export default function BookingPage() {
       <div className="actions">
         <button className="btn" onClick={preview} disabled={busy || !sel?.booking_payload}>预览选中号源</button>
         <button className="btn primary" onClick={submit} disabled={!canBook}>直接挂号（并行执行）</button>
+        <button className="btn" onClick={openWaitlist} disabled={!waitlistUrl}
+          title="仅支持官方状态为候补的号源；打开官方科室号源页，由官方完成登录、额度核验和候补申请。">
+          官方候补
+        </button>
       </div>
+      {isWaitlist
+        ? <div className="notice info" style={{ marginTop: 8 }}>该号源为官方“候补”状态，不能直接挂号；请使用「官方候补」入口，由官方完成候补申请。</div>
+        : !sel?.booking_payload && <div className="hint" style={{ marginTop: 8 }}>候补入口仅对官方状态为“候补”的号源可用。</div>}
       {notice.text && <div className={`notice ${notice.type}`}>{notice.text}</div>}
       {order && <div className="notice ok">订单号：{order}</div>}
     </div>

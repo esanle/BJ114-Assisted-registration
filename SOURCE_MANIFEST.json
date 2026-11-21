@@ -247,8 +247,8 @@
     },
     {
       "path": "src/rpc_service.cpp",
-      "bytes": 11308,
-      "sha256": "30508b9a32e3a75291822de4c12453af5bba666fb0d90b12da8d004a0eba5acd"
+      "bytes": 11546,
+      "sha256": "3f7eeb87b62b5e9c8c052289d679a3fa7ec17ac8aba386fb1a8e1a4902f36d4d"
     },
     {
       "path": "src/runtime_paths.h",
@@ -351,29 +351,29 @@
       "sha256": "5ab3b9c853621fa4d2cc1f2137ab55cabe955c0ef99b7f0a3584051c86889f9a"
     },
     {
+      "path": "ui/dist/assets/index-BABzLBqL.js",
+      "bytes": 250147,
+      "sha256": "39a385b33e29c15bcad76a5c8051cefd57990e595fa485e6ff29fb9d1703c7d7"
+    },
+    {
       "path": "ui/dist/assets/index-CdJqOdW1.css",
       "bytes": 4466,
       "sha256": "ad25c9cd2c6056941d0e050aa83e2cbbbb05ef7868920b60d95ccdc17cc4a402"
     },
     {
-      "path": "ui/dist/assets/index-zPZW-A7x.js",
-      "bytes": 248529,
-      "sha256": "28d16bb945b6b93229f5f0a25fb9c48f614dd6872c83442e0da55aaddf9a1d0b"
-    },
-    {
       "path": "ui/dist/index.html",
       "bytes": 408,
-      "sha256": "9634a622096ddf46fedcc33669eade7964021c4b6c47e7e44f68fd2407e47037"
+      "sha256": "61f2b3164214747087c477fca5dd700d3fe8188dfa6c377856b8037cbb98f733"
     },
     {
       "path": "ui/electron/main.cjs",
-      "bytes": 4061,
-      "sha256": "a9e350e3dd7c176b6eb801f7002db4982c4706e01a773499a5f597f839bea6b7"
+      "bytes": 4403,
+      "sha256": "96cbfbe84d7acbfc2188c3448399d25702ed53489e478e6fd9b721f914ecd328"
     },
     {
       "path": "ui/electron/preload.cjs",
-      "bytes": 282,
-      "sha256": "99be234499dca0e619bc84e6aef7896f766854bb27ac8b78d766e4392671b0de"
+      "bytes": 354,
+      "sha256": "a0b247aa656eb1fdfe24c5d5c194cc195db2bf279b40ef104240630f6902fb53"
     },
     {
       "path": "ui/index.html",
@@ -397,8 +397,8 @@
     },
     {
       "path": "ui/src/BookingPage.jsx",
-      "bytes": 4597,
-      "sha256": "f2c64d08928ed52e0c9b0de5a6933e14aba2d5d201c58b56bf862805a7963289"
+      "bytes": 5904,
+      "sha256": "6e01ac33774aae5585067c1a1f0f163a7a5c320c4122b603a2bcb1de67dcbdc0"
     },
     {
       "path": "ui/src/CatalogPage.jsx",
@@ -427,8 +427,8 @@
     },
     {
       "path": "ui/src/rpc.js",
-      "bytes": 5266,
-      "sha256": "697db60bc5dbb8049bdf44e6f83e975d00fd79c15a72d7b459cc1d1e29601a1b"
+      "bytes": 6350,
+      "sha256": "793f86a08a5ac301343ce9292636828c8db1926aa09a9fa103c6d0d4b7b8e771"
     },
     {
       "path": "ui/src/store.jsx",

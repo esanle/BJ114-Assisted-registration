@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, shell } = require('electron');
 const { spawn } = require('node:child_process');
 const path = require('node:path');
 
@@ -63,6 +63,14 @@ function rpcCall(op, params) {
 }
 
 ipcMain.handle('rpc:info', () => rpcReadyInfo);
+ipcMain.handle('shell:openExternal', async (_event, url) => {
+  // Only allow the official registration host over https.
+  let parsed;
+  try { parsed = new URL(url); } catch { return false; }
+  if (parsed.protocol !== 'https:' || parsed.hostname !== 'www.114yygh.com') return false;
+  await shell.openExternal(url);
+  return true;
+});
 ipcMain.handle('file:read', async (_event, rel) => {
   const fs = require('node:fs');
   const full = path.resolve(PROJECT_ROOT, rel);
