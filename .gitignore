@@ -1,5 +1,6 @@
 # Local dependencies and build products
 node_modules/
+ui/dist/
 .wireit/
 build/
 build-*/

@@ -3,7 +3,7 @@
   "version": "1.2.0",
   "hash_strategy": "git_text_lf_sha256",
   "hash_description": "Git text blobs normalized to LF; binary image bytes preserved. Windows CRLF checkouts are normalized by the audit.",
-  "file_count": 788,
+  "file_count": 808,
   "files": [
     {
       "path": ".gitattributes",
@@ -12,8 +12,8 @@
     },
     {
       "path": ".gitignore",
-      "bytes": 502,
-      "sha256": "185f94d77a6d145a1363b3b0408716e89f583d6d3dc78909f23ebb34c2270eab"
+      "bytes": 511,
+      "sha256": "17d43ee2e1d7cc14c65f7868b207dc2bfae641e8132e9343106858f0bb7c3d7c"
     },
     {
       "path": "AssistedRegistration.pro",
@@ -27,8 +27,8 @@
     },
     {
       "path": "CMakeLists.txt",
-      "bytes": 6456,
-      "sha256": "5af22717dd9d0687196e508ccc4ea9bcf29e7d4c2fdf1cc85c0a5e23c51d2e9a"
+      "bytes": 6672,
+      "sha256": "596342d3fcd3e113ea3d05f8a42864130638045d1950ba4f79ce337c87ccc8e4"
     },
     {
       "path": "LICENSE",
@@ -37,8 +37,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 12529,
-      "sha256": "d4dccbdb3d376b6bf971fa438d2125c9d37614ae0d95819d6c46959a874aef41"
+      "bytes": 13844,
+      "sha256": "6606138aa916d7b317c15d48bab73b52bf82fbbf2649e96ad12b5e777ab004eb"
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",
@@ -246,6 +246,11 @@
       "sha256": "5dcefdb63775c09d01cc3ecdb785e865a178e88f2da31d3bd30599ca5ce9b867"
     },
     {
+      "path": "src/rpc_service.cpp",
+      "bytes": 11308,
+      "sha256": "30508b9a32e3a75291822de4c12453af5bba666fb0d90b12da8d004a0eba5acd"
+    },
+    {
       "path": "src/runtime_paths.h",
       "bytes": 456,
       "sha256": "acb3283ecc2238d33e3e2af32cd7de87204071830fbf2fa25d0e63c46eaf0cd4"
@@ -344,6 +349,101 @@
       "path": "tests/smooth_refresh_offline_test.cpp",
       "bytes": 18843,
       "sha256": "5ab3b9c853621fa4d2cc1f2137ab55cabe955c0ef99b7f0a3584051c86889f9a"
+    },
+    {
+      "path": "ui/dist/assets/index-CdJqOdW1.css",
+      "bytes": 4466,
+      "sha256": "ad25c9cd2c6056941d0e050aa83e2cbbbb05ef7868920b60d95ccdc17cc4a402"
+    },
+    {
+      "path": "ui/dist/assets/index-zPZW-A7x.js",
+      "bytes": 248529,
+      "sha256": "28d16bb945b6b93229f5f0a25fb9c48f614dd6872c83442e0da55aaddf9a1d0b"
+    },
+    {
+      "path": "ui/dist/index.html",
+      "bytes": 408,
+      "sha256": "9634a622096ddf46fedcc33669eade7964021c4b6c47e7e44f68fd2407e47037"
+    },
+    {
+      "path": "ui/electron/main.cjs",
+      "bytes": 4061,
+      "sha256": "a9e350e3dd7c176b6eb801f7002db4982c4706e01a773499a5f597f839bea6b7"
+    },
+    {
+      "path": "ui/electron/preload.cjs",
+      "bytes": 282,
+      "sha256": "99be234499dca0e619bc84e6aef7896f766854bb27ac8b78d766e4392671b0de"
+    },
+    {
+      "path": "ui/index.html",
+      "bytes": 308,
+      "sha256": "a30f0b7e66cc30d59b658b2e9d4bcfae52ab11b7203fa56998439187a57f42b8"
+    },
+    {
+      "path": "ui/package-lock.json",
+      "bytes": 64947,
+      "sha256": "cfcc6404a58228737049df38f47f2f3b7c998c42687ddaa1f9dccb31cc75e3b4"
+    },
+    {
+      "path": "ui/package.json",
+      "bytes": 528,
+      "sha256": "5c682edd6f67e5f07baef60c42cf61dcbfc6269796acbc35f76a8112f2a4e291"
+    },
+    {
+      "path": "ui/src/App.jsx",
+      "bytes": 2439,
+      "sha256": "8892ef0bbc42c17a78cd9cdebd897b6b7c444b05ce2251d44fdc2c70880da93a"
+    },
+    {
+      "path": "ui/src/BookingPage.jsx",
+      "bytes": 4597,
+      "sha256": "f2c64d08928ed52e0c9b0de5a6933e14aba2d5d201c58b56bf862805a7963289"
+    },
+    {
+      "path": "ui/src/CatalogPage.jsx",
+      "bytes": 4710,
+      "sha256": "9527f2e3163df20ae6571dd63221b45b43f1d9eb1492823b9102e4c72fe056d4"
+    },
+    {
+      "path": "ui/src/LoginPage.jsx",
+      "bytes": 6577,
+      "sha256": "b3ca53f221d331be9bb0d0c3ce32594ffaa7a8e583f917f6c14f3f0db6fb3b85"
+    },
+    {
+      "path": "ui/src/QueryPage.jsx",
+      "bytes": 7787,
+      "sha256": "73139c53bc382b64df865e4ec47820de5e83109c24ab16e17df6ab29c388780d"
+    },
+    {
+      "path": "ui/src/SettingsPage.jsx",
+      "bytes": 1465,
+      "sha256": "cd557b44c8a6e83acbd9c549fb8fbee98f784998a0fda1a29a9d0f4a0387d0b5"
+    },
+    {
+      "path": "ui/src/main.jsx",
+      "bytes": 229,
+      "sha256": "6470adc38f7ef7e6e67ed707aa9ce83500bd38f674d43821d8a65d762df8dfc5"
+    },
+    {
+      "path": "ui/src/rpc.js",
+      "bytes": 5266,
+      "sha256": "697db60bc5dbb8049bdf44e6f83e975d00fd79c15a72d7b459cc1d1e29601a1b"
+    },
+    {
+      "path": "ui/src/store.jsx",
+      "bytes": 1684,
+      "sha256": "145e77a3f494e77186a56b8d462ab61d2b333397f702d6b865652a7d4f44c852"
+    },
+    {
+      "path": "ui/src/styles.css",
+      "bytes": 5117,
+      "sha256": "f9b0285d915e453af3e77774fbd17445dbad283c5fd6f448f4cec9cbaf252886"
+    },
+    {
+      "path": "ui/vite.config.js",
+      "bytes": 178,
+      "sha256": "a2fd1e9306fed8f58320ae5f5f428e4a6e19bd3411692a5e3c610bbb75fedea7"
     },
     {
       "path": "vendor/jsdom/LICENSE.txt",

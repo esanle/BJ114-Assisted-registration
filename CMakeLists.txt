@@ -31,6 +31,10 @@ endfunction()
 add_executable(AssistedRegistration WIN32 src/main.cpp src/native_backend.cpp src/native_service.cpp src/booking_service.cpp)
 add_dependencies(AssistedRegistration application_moc)
 configure_application(AssistedRegistration)
+
+# Headless JSON-RPC backend for the web UI prototype.
+add_executable(RegistrationRpc src/rpc_service.cpp src/native_backend.cpp src/native_service.cpp src/booking_service.cpp)
+configure_application(RegistrationRpc)
 include(CTest)
 if(BUILD_TESTING)
   # Fixtures that compile the real Window from src/main.cpp and need generated/main.moc.

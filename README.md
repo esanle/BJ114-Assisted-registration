@@ -117,6 +117,24 @@ Windows x64 完整运行包提供 Qt、Node 与所需依赖。完整解压并保
 
 CMake 已接入 `tests/` 下全部离线测试；非 Windows 平台的 GUI fixture 使用 `QT_QPA_PLATFORM=offscreen`，并包含 16 组并行查询调度变体（连接数 1/2/4/16 × 模式 detail/empty/mixed/fastdetail）。`build.cmd` / `run.cmd` 仍是 Windows 专用。
 
+### Web UI 原型(Electron + React)
+
+`ui/` 目录下是一个新的 Web UI 原型,用于把原 Qt 单页界面拆成独立页面(账号登录、医院与科室、号源查询、挂号、设置)。它不替换现有 Qt 程序,而是通过本地 JSON-RPC 复用同一套已验证的 C++ 后端:
+
+- `src/rpc_service.cpp`:headless 本地服务,stdin/stdout JSONL 协议,长驻 `BookingService`(登录状态机)与 `Service`(查询会话)。组织/应用名与老程序一致,因此**能读取老程序保存的会话**并经官方校验恢复。
+- `ui/electron/`:Electron 主进程启动 RPC 服务并转发 IPC;preload 暴露 `window.api.call`。
+- `ui/src/`:React 页面,登录会话只保留脱敏视图,原始 cookie 不进前端。
+
+`--fixture` 模式用合成数据走通全流程(图形码/短信/登录/科室/排班/预览/提交),无需真实账号。构建与运行:
+
+```bash
+cmake -S . -B build-macos -DCMAKE_PREFIX_PATH="$(brew --prefix qt@5)" -DCMAKE_BUILD_TYPE=Release
+cmake --build build-macos --target RegistrationRpc --parallel 4
+cd ui && npm install && npm run build
+ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ node node_modules/electron/install.js  # 如二进制未下载
+cd .. && ./ui/node_modules/.bin/electron ./ui --fixture   # 或去掉 --fixture 用真实会话/官方接口
+```
+
 ## 运行时与隐私
 
 booking_route_runtime.cjs、query_runtime.cjs、legacy_readonly_runtime.cjs 来自当前实际使用的运行时，仅调整模块定位以去除开发机路径。helpers 也保留原实现并使用包定位。公开请求头文件只包含 Accept、语言、User-Agent 和 Sec-Fetch 类字段，不包含 Cookie、Authorization、请求正文或个人会话。
