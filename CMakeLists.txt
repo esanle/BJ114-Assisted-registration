@@ -20,6 +20,9 @@ function(configure_application target)
   if(WIN32)
     target_link_libraries(${target} PRIVATE ws2_32)
   endif()
+  if(APPLE)
+    target_link_libraries(${target} PRIVATE "-framework Security" "-framework CoreFoundation")
+  endif()
   target_compile_definitions(${target} PRIVATE NOMINMAX WIN32_LEAN_AND_MEAN)
   if(MSVC)
     target_compile_options(${target} PRIVATE /utf-8)
@@ -75,6 +78,7 @@ if(BUILD_TESTING)
   endif()
 
   add_test(NAME booking_service_offline COMMAND AssistedRegistration --booking-self-test --output "${CMAKE_BINARY_DIR}/booking-tests.json")
+  add_test(NAME session_service_offline COMMAND AssistedRegistration --session-self-test --output "${CMAKE_BINARY_DIR}/session-tests.json")
   add_test(NAME query_service_offline COMMAND AssistedRegistration --self-test --output "${CMAKE_BINARY_DIR}/query-tests.json")
   add_test(NAME backend_offline COMMAND backend_booking_offline_probe "${PROJECT_SOURCE_DIR}")
   add_test(NAME booking_ui_offline COMMAND booking_ui_offline_test "${PROJECT_SOURCE_DIR}")
@@ -90,7 +94,7 @@ if(BUILD_TESTING)
   add_test(NAME legacy_query_offline COMMAND legacy_query_offline_test "${PROJECT_SOURCE_DIR}")
 
   set_tests_properties(
-    booking_service_offline query_service_offline backend_offline
+    booking_service_offline session_service_offline query_service_offline backend_offline
     booking_ui_offline preview_probe_offline pool_recovery_offline
     parallel_query_offline smooth_refresh_offline session_store_offline
     dns_cache_offline legacy_parser_offline legacy_departments_offline

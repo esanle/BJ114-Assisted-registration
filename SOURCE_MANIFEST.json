@@ -17,8 +17,8 @@
     },
     {
       "path": "AssistedRegistration.pro",
-      "bytes": 780,
-      "sha256": "da5180f0178f9e37944d205d481127fdfcdc646202db496f84bd242615270cb4"
+      "bytes": 814,
+      "sha256": "ec6815da09c9ce745fe23527d37d61094198de879a7add6d3a2879648ed06c8e"
     },
     {
       "path": "CHANGELOG.md",
@@ -27,8 +27,8 @@
     },
     {
       "path": "CMakeLists.txt",
-      "bytes": 6175,
-      "sha256": "7ec94c2bee1d4637c987dae5f0ab1fe6dc58043600759a1f260623e04a029f0c"
+      "bytes": 6456,
+      "sha256": "5af22717dd9d0687196e508ccc4ea9bcf29e7d4c2fdf1cc85c0a5e23c51d2e9a"
     },
     {
       "path": "LICENSE",
@@ -37,8 +37,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 12348,
-      "sha256": "c227b2d2f272e7c0820657da1e4a3597f7a7cd3232e6906345fcc9cbd4778ff4"
+      "bytes": 12529,
+      "sha256": "d4dccbdb3d376b6bf971fa438d2125c9d37614ae0d95819d6c46959a874aef41"
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",
@@ -192,8 +192,8 @@
     },
     {
       "path": "src/booking_service.cpp",
-      "bytes": 68563,
-      "sha256": "2a7f8a166fccb4529edfa5105c5e054a05ccea9e40b8084787f34b74df5985dc"
+      "bytes": 68562,
+      "sha256": "19b7c7b59244224eeadfe6206187090c93b43e17d8a42790ddacd2c40b4481f2"
     },
     {
       "path": "src/booking_service.h",
@@ -202,8 +202,8 @@
     },
     {
       "path": "src/booking_session_store.h",
-      "bytes": 12018,
-      "sha256": "9ec75c277e5e4c59276d374046c6a2b3d6ec2af67f6eb6897d0c3ab8efa3d1c3"
+      "bytes": 20200,
+      "sha256": "5449185ff9fde3933447508b71eb6f61921c26cb011db945444f6d5a6b1560a7"
     },
     {
       "path": "src/booking_table_tools.h",
@@ -222,8 +222,8 @@
     },
     {
       "path": "src/main.cpp",
-      "bytes": 124247,
-      "sha256": "d7a4518d9c29aaafdcd71f94214f1c5c047bc28ef54b1195ca5b1f33e64e8371"
+      "bytes": 124261,
+      "sha256": "bcec4e4029358105c796e87bcbefc871b032a7adbd386fd1d832ba4c3c9d12fb"
     },
     {
       "path": "src/native_backend.cpp",
@@ -337,8 +337,8 @@
     },
     {
       "path": "tests/session_store_offline_test.cpp",
-      "bytes": 6888,
-      "sha256": "ec4bb139a920b77f0d5e6958d4333259a3d8bc8305c2d18ad50420266dbe075d"
+      "bytes": 6918,
+      "sha256": "0941f1c8a081481a056d4388378d11aeb06fd9d50b95f83fe5a639f5543d9d14"
     },
     {
       "path": "tests/smooth_refresh_offline_test.cpp",

@@ -28,11 +28,11 @@
 
 ### 登录与会话恢复
 
-首次使用仍需本人获取并输入验证码完成登录。成功登录后，程序只将经过约束的官方会话 Cookie 保存到 Windows 当前用户的应用数据目录，使用 CurrentUser DPAPI 加密；不把手机号、验证码、就诊人或就诊卡内容写入此会话文件。源码和分发包均不携带真实会话文件或账号数据。
+首次使用仍需本人获取并输入验证码完成登录。成功登录后，程序只将经过约束的官方会话 Cookie 保存到当前用户的应用数据目录：Windows 使用 CurrentUser DPAPI 加密，macOS 使用登录 Keychain 保管 AES-256 密钥；不把手机号、验证码、就诊人或就诊卡内容写入此会话文件。源码和分发包均不携带真实会话文件或账号数据。
 
 普通界面启动发现保存的会话时，会尝试一次后台恢复：解密后创建新会话，先经官方用户接口确认，再加载就诊人及就诊卡。无保存文件时不发起恢复登录请求。会话过期或校验失败仍需本人重新登录；不能保证永久登录。
 
-点击退出登录会先清除本地加密会话，远端退出失败也不应继续保留本地登录；若删除失败，界面会明确提示。DPAPI 将恢复范围限制为当前 Windows 用户，不能替代对电脑和账号的保护。请避免同时运行多个实例：另一实例若已独立验证登录，仍可能再次保存其会话。
+点击退出登录会先清除本地加密会话，远端退出失败也不应继续保留本地登录；若删除失败，界面会明确提示。DPAPI / Keychain 将恢复范围限制为当前系统用户，不能替代对电脑和账号的保护。请避免同时运行多个实例：另一实例若已独立验证登录，仍可能再次保存其会话。
 
 ### 手动并发挂号
 
@@ -105,7 +105,7 @@ Windows x64 完整运行包提供 Qt、Node 与所需依赖。完整解压并保
 
 ### macOS 构建（社区适配）
 
-官方发行流程仍面向 Windows x64；源码在 macOS（Apple Silicon）上可通过 CMake 构建。已验证环境为 Apple Clang 21、Homebrew `qt@5`（5.15.19）、Node 26 与系统 curl。注意 Windows CurrentUser DPAPI 会话保存/恢复在 macOS 上不可用，会直接 fail closed，不影响其余本地功能。
+官方发行流程仍面向 Windows x64；源码在 macOS（Apple Silicon）上可通过 CMake 构建。已验证环境为 Apple Clang 21、Homebrew `qt@5`（5.15.19）、Node 26 与系统 curl。会话加密保存已在 macOS 适配：Windows 使用 CurrentUser DPAPI，macOS 使用登录 Keychain 保管 AES-256 密钥（仅当前用户、解锁后可用），会话文件位于 `~/Library/Application Support/HospitalBooking/official-session/`。
 
     brew install qt@5
     npm ci
