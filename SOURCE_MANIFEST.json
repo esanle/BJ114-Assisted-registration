@@ -27,8 +27,8 @@
     },
     {
       "path": "CMakeLists.txt",
-      "bytes": 2910,
-      "sha256": "b6ddf1c4b7c86413ad35f05c8a6e5d2d79055282aec593f2e087cc18057c5a56"
+      "bytes": 6175,
+      "sha256": "7ec94c2bee1d4637c987dae5f0ab1fe6dc58043600759a1f260623e04a029f0c"
     },
     {
       "path": "LICENSE",
@@ -37,8 +37,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 11459,
-      "sha256": "a869295b549694369a42b6bc89e22881a0808f740c32a1617fe32c25d45a46e0"
+      "bytes": 12348,
+      "sha256": "c227b2d2f272e7c0820657da1e4a3597f7a7cd3232e6906345fcc9cbd4778ff4"
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",
@@ -222,8 +222,8 @@
     },
     {
       "path": "src/main.cpp",
-      "bytes": 119786,
-      "sha256": "cd46a5c1d18fcdd1bcd4402f12484abd14aed6a4e3b8bb0f160e84c14daecaae"
+      "bytes": 120829,
+      "sha256": "50b384dab1ea850ea484030e637e9c234047a2c9f3d72b7c3ae459079bdfe767"
     },
     {
       "path": "src/native_backend.cpp",
@@ -237,8 +237,8 @@
     },
     {
       "path": "src/native_service.cpp",
-      "bytes": 88214,
-      "sha256": "3859768f7069af817c5fe6611318a03cc6f6325e64f81b3152cc0b1ace067787"
+      "bytes": 88227,
+      "sha256": "cc63e149ac2b47d0b39a1a4192478a9071243642946162dc3a08ccf77a2d3e92"
     },
     {
       "path": "src/native_service.h",
@@ -307,13 +307,13 @@
     },
     {
       "path": "tests/legacy_query_offline_test.cpp",
-      "bytes": 9583,
-      "sha256": "9916647e503b72e81d53200e2b93abbf0f0514e49a45d4379455ff30b602bfe3"
+      "bytes": 9624,
+      "sha256": "23be8b2e9ffad73bf0051ecf3f9ca57f17f25183deb0378a96c318c83f39e020"
     },
     {
       "path": "tests/legacy_service_offline_test.cpp",
-      "bytes": 17485,
-      "sha256": "efa5f18089f813c79d1444c5f5a4533a16ca8a5664c205063c9ab33b279adb41"
+      "bytes": 17526,
+      "sha256": "849c533e37ca0425165a9227f831caf7ed2b7d3190bdef9786a3b0dfd2d7616a"
     },
     {
       "path": "tests/offline_broker_guard.cpp",
@@ -322,13 +322,13 @@
     },
     {
       "path": "tests/parallel_query_offline_test.cpp",
-      "bytes": 7800,
-      "sha256": "df2fb923544b13bcb9f2993b137433f5311dbcab1af7d6c543b12c2c9c464232"
+      "bytes": 7896,
+      "sha256": "f277d672780cb9e5bfa16fc257b9b78b3f652dcda0b51ff00c0ca38e56c597d8"
     },
     {
       "path": "tests/pool_recovery_offline_test.cpp",
-      "bytes": 13841,
-      "sha256": "c63f1b29dbfdafe4e378297fd4f38bbc7133d626fb9d7467800e1db6a7abb3cd"
+      "bytes": 13941,
+      "sha256": "4768c2a389c9b9dc73eec67075e647bb00e80f4bf84050db2d99824ed9ebc5e2"
     },
     {
       "path": "tests/preview_probe.cpp",

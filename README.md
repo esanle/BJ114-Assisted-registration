@@ -103,6 +103,20 @@ build.log 用于诊断本机编译错误，不属于发布源码。Windows 运�
 
 Windows x64 完整运行包提供 Qt、Node 与所需依赖。完整解压并保留 DLL、platforms、data、runtime、node_modules 等随附文件，再双击“辅助挂号软件 v1.2.0.exe”；不要只移动 EXE。运行包不包含真实账号或会话。
 
+### macOS 构建（社区适配）
+
+官方发行流程仍面向 Windows x64；源码在 macOS（Apple Silicon）上可通过 CMake 构建。已验证环境为 Apple Clang 21、Homebrew `qt@5`（5.15.19）、Node 26 与系统 curl。注意 Windows CurrentUser DPAPI 会话保存/恢复在 macOS 上不可用，会直接 fail closed，不影响其余本地功能。
+
+    brew install qt@5
+    npm ci
+    cmake -S . -B build-macos \
+      -DCMAKE_PREFIX_PATH="$(brew --prefix qt@5)" \
+      -DCMAKE_BUILD_TYPE=Release
+    cmake --build build-macos --parallel 4
+    ctest --test-dir build-macos --output-on-failure
+
+CMake 已接入 `tests/` 下全部离线测试；非 Windows 平台的 GUI fixture 使用 `QT_QPA_PLATFORM=offscreen`，并包含 16 组并行查询调度变体（连接数 1/2/4/16 × 模式 detail/empty/mixed/fastdetail）。`build.cmd` / `run.cmd` 仍是 Windows 专用。
+
 ## 运行时与隐私
 
 booking_route_runtime.cjs、query_runtime.cjs、legacy_readonly_runtime.cjs 来自当前实际使用的运行时，仅调整模块定位以去除开发机路径。helpers 也保留原实现并使用包定位。公开请求头文件只包含 Accept、语言、User-Agent 和 Sec-Fetch 类字段，不包含 Cookie、Authorization、请求正文或个人会话。

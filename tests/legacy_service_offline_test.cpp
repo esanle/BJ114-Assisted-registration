@@ -14,6 +14,7 @@ Broker::Broker(QString,std::atomic_bool *cancel):d(new Impl){d->cancel=cancel;}
 Broker::~Broker()=default;
 void Broker::prewarm(){d->live=true;}
 void Broker::setCancel(std::atomic_bool *v){d->cancel=v;}
+void Broker::setPublicBackground(bool){}
 void Broker::selectHospital(const QString &v){d->code=v;}
 void Broker::selectLegacyHospital(const QString &v){d->code=v;d->legacySelected=true;}
 Response Broker::request(const QString &method,const QString &path,const QJsonObject &body,bool prepared){

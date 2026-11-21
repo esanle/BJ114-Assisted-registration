@@ -446,6 +446,16 @@ private:
    for(int c=0;c<values.size();++c){auto *item=rows_->item(r,c);if(!item){item=new BookingTableItem(values[c]);rows_->setItem(r,c,item);}else if(item->text()!=values[c])item->setText(values[c]);const QString tip=c==8?a.value("queried_at").toString():summary?explanation:c==5?(a.value("registration_fee_status")==QJsonValue("official_encoded")?QString::fromUtf8("旧版官方价格使用数字字体编码，尚未解码；不把编码当作金额。"):QString::fromUtf8("官方价格，单位：元；支付以官方核验及结算为准。")):QString();if(item->toolTip()!=tip)item->setToolTip(tip);}
    rows_->item(r,0)->setData(Qt::UserRole+7,key);if(rows_->item(r,0)->data(Qt::UserRole).toJsonObject()!=a)rows_->item(r,0)->setData(Qt::UserRole,a);double amount=0;QVariant numeric;if(!summary&&registrationFeeNumber(a,amount))numeric=amount;if(rows_->item(r,5)->data(BookingTableItem::SortValueRole)!=numeric)rows_->item(r,5)->setData(BookingTableItem::SortValueRole,numeric);
   }
+  // Incremental refresh reuses row positions, so results can end up in arrival order
+  // rather than the selected-date order produced by rebuildBatchRows(). Move the
+  // existing items into the requested order instead of recreating them, keeping the
+  // item-pointer stability that incremental refresh relies on.
+  if(rows_->rowCount()==visibleKeys.size()){
+   QVector<QVector<QTableWidgetItem*>> grid;grid.reserve(rows_->rowCount());
+   for(int r=0;r<rows_->rowCount();++r){QVector<QTableWidgetItem*> line;line.reserve(rows_->columnCount());for(int c=0;c<rows_->columnCount();++c)line.append(rows_->takeItem(r,c));grid.append(line);}
+   QHash<QByteArray,int> sourceRow;for(int r=0;r<grid.size();++r)if(!grid[r].isEmpty()&&grid[r][0])sourceRow.insert(grid[r][0]->data(Qt::UserRole+7).toByteArray(),r);
+   for(int target=0;target<visibleKeys.size();++target){const int source=sourceRow.value(visibleKeys.at(target),-1);if(source<0)continue;for(int c=0;c<rows_->columnCount();++c)rows_->setItem(target,c,grid[source].value(c,nullptr));}
+  }
   rows_->setSortingEnabled(sorting);rowTools_->refresh();
   if(!selectedKey.isEmpty()){int found=-1;for(int r=0;r<rows_->rowCount();++r)if(rows_->item(r,0)->data(Qt::UserRole+7).toByteArray()==selectedKey&&!rows_->isRowHidden(r)){found=r;break;}if(found>=0)rows_->setCurrentCell(found,0,QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows);else{rows_->clearSelection();rows_->setCurrentItem(nullptr);}}
   rows_->verticalScrollBar()->setValue(scrollV);rows_->horizontalScrollBar()->setValue(scrollH);rows_->setUpdatesEnabled(updates);calendar_->setDoctorRows(visible);updateBookingControls();
