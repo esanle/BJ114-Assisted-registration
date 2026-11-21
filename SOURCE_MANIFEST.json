@@ -37,8 +37,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 13844,
-      "sha256": "6606138aa916d7b317c15d48bab73b52bf82fbbf2649e96ad12b5e777ab004eb"
+      "bytes": 14110,
+      "sha256": "fa50941228461e906cf4ad4a3e6b3bcce821c9ad115036ab27c29cb538b8ca78"
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",
@@ -351,9 +351,9 @@
       "sha256": "5ab3b9c853621fa4d2cc1f2137ab55cabe955c0ef99b7f0a3584051c86889f9a"
     },
     {
-      "path": "ui/dist/assets/index-BABzLBqL.js",
-      "bytes": 250147,
-      "sha256": "39a385b33e29c15bcad76a5c8051cefd57990e595fa485e6ff29fb9d1703c7d7"
+      "path": "ui/dist/assets/index-COfrbUH5.js",
+      "bytes": 253620,
+      "sha256": "5d1b8bf26910942ee79f54babde2875590a34de076615ad1abc9d0f3c8bb1f59"
     },
     {
       "path": "ui/dist/assets/index-CdJqOdW1.css",
@@ -363,7 +363,7 @@
     {
       "path": "ui/dist/index.html",
       "bytes": 408,
-      "sha256": "61f2b3164214747087c477fca5dd700d3fe8188dfa6c377856b8037cbb98f733"
+      "sha256": "dbf00747892557c7bdc6822b203b40f1666c3791cea5b55091c4ff8e778ce5ba"
     },
     {
       "path": "ui/electron/main.cjs",
@@ -412,13 +412,13 @@
     },
     {
       "path": "ui/src/QueryPage.jsx",
-      "bytes": 7787,
-      "sha256": "73139c53bc382b64df865e4ec47820de5e83109c24ab16e17df6ab29c388780d"
+      "bytes": 12150,
+      "sha256": "ab17ff6d81bb9de6122565fd94ac6cbc9a8200e60ee0b07cdeed2a99d279794d"
     },
     {
       "path": "ui/src/SettingsPage.jsx",
-      "bytes": 1465,
-      "sha256": "cd557b44c8a6e83acbd9c549fb8fbee98f784998a0fda1a29a9d0f4a0387d0b5"
+      "bytes": 2563,
+      "sha256": "a4f22a5730c9ad99566682617f658feced21f37c89f57642470adbe51ed7520a"
     },
     {
       "path": "ui/src/main.jsx",
@@ -432,8 +432,8 @@
     },
     {
       "path": "ui/src/store.jsx",
-      "bytes": 1684,
-      "sha256": "145e77a3f494e77186a56b8d462ab61d2b333397f702d6b865652a7d4f44c852"
+      "bytes": 1723,
+      "sha256": "07943e50e8fb3519dd19afe827d32cfbea32727f1629f357b898be733ead1723"
     },
     {
       "path": "ui/src/styles.css",

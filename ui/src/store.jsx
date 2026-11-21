@@ -2,7 +2,7 @@ import React, { createContext, useContext, useReducer } from 'react';
 
 const initialState = {
   session: { logged_in: false, authenticated: false, patients: [] },
-  config: { queryConnections: 7, bookingParallel: 16, refreshInterval: 60 },
+  config: { queryConnections: 7, bookingParallel: 16, refreshInterval: 60, autoRefresh: false, jitterSeconds: 15 },
   hospitals: [],
   departments: [],
   selectedHospital: null,
