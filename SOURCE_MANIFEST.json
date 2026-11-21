@@ -222,8 +222,8 @@
     },
     {
       "path": "src/main.cpp",
-      "bytes": 120829,
-      "sha256": "50b384dab1ea850ea484030e637e9c234047a2c9f3d72b7c3ae459079bdfe767"
+      "bytes": 124247,
+      "sha256": "d7a4518d9c29aaafdcd71f94214f1c5c047bc28ef54b1195ca5b1f33e64e8371"
     },
     {
       "path": "src/native_backend.cpp",
