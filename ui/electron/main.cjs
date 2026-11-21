@@ -1,5 +1,5 @@
-const { app, BrowserWindow, ipcMain, shell } = require('electron');
-const { spawn } = require('node:child_process');
+const { app, BrowserWindow, ipcMain, shell, Notification } = require('electron');
+const { spawn, execFile } = require('node:child_process');
 const path = require('node:path');
 
 const PROJECT_ROOT = path.resolve(__dirname, '..', '..');
@@ -80,6 +80,40 @@ ipcMain.handle('file:read', async (_event, rel) => {
 ipcMain.handle('rpc:call', async (_event, { op, params }) => {
   try { return await rpcCall(op, params || {}); }
   catch (e) { return { ok: false, status: 'failed', failure: 'rpc_error', message: e.message }; }
+});
+
+// System notification when query results are non-empty.
+ipcMain.handle('notify', async (_event, payload) => {
+  try {
+    if (!Notification.isSupported()) return false;
+    const note = new Notification({
+      title: (payload && payload.title) || '辅助挂号软件 · 有号提醒',
+      body: (payload && payload.body) || '查询到可预约号源，请查看查询结果。'
+    });
+    note.show();
+    return true;
+  } catch (e) { console.error('[ui] notify failed:', e.message); return false; }
+});
+
+// Play an alarm-like sound. macOS: afplay with a built-in sound, repeated.
+// Windows: use a short PowerShell beep sequence. Best-effort, never fatal.
+ipcMain.handle('play-alarm', async (_event, times) => {
+  const n = Math.max(1, Math.min(10, Number(times) || 3));
+  const playOnce = () => new Promise((resolve) => {
+    if (process.platform === 'darwin') {
+      const sound = '/System/Library/Sounds/Ping.aiff';
+      execFile('afplay', [sound], (err) => resolve(!err));
+    } else if (process.platform === 'win32') {
+      execFile('powershell', ['-Command', '[console]::beep(880,180)'], (err) => resolve(!err));
+    } else {
+      resolve(false);
+    }
+  });
+  try {
+    let ok = false;
+    for (let i = 0; i < n; ++i) { if (await playOnce()) ok = true; }
+    return ok;
+  } catch (e) { console.error('[ui] play-alarm failed:', e.message); return false; }
 });
 
 function createWindow() {

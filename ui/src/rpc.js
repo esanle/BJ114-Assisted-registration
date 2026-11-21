@@ -87,6 +87,16 @@ export async function openExternal(url) {
   return true;
 }
 
+export async function notify(title, body) {
+  if (window.api?.notify) return window.api.notify({ title, body });
+  return false;
+}
+
+export async function playAlarm(times = 3) {
+  if (window.api?.playAlarm) return window.api.playAlarm(times);
+  return false;
+}
+
 // Mirror the legacy Window::officialWaitlistUrl rule: only official
 // "候补" (product_status == 8) rows get an official waitlist entry.
 export function officialWaitlistUrl(row) {

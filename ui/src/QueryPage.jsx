@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { rpcCall } from './rpc.js';
+import { rpcCall, notify, playAlarm } from './rpc.js';
 import { useStore } from './store.jsx';
 
 const WEEK = ['一', '二', '三', '四', '五', '六', '日'];
@@ -118,6 +118,12 @@ export default function QueryPage() {
       }
       dispatch({ type: 'rows', value: allRows });
       setNotice({ type: 'ok', text: `查询完成，共 ${allRows.length} 行。` + (automatic ? '（自动刷新）' : '') });
+      // Alert when results are non-empty and the checkbox is on.
+      if (state.config.notifyOnResults && allRows.length > 0) {
+        const bookable = allRows.filter((r) => String(r.product_status) !== '8').length;
+        notify('辅助挂号软件 · 有号提醒', `本次查到 ${allRows.length} 行号源（可挂号 ${bookable} 行），请及时查看。`);
+        playAlarm(3);
+      }
       ok = true;
     } catch (e) {
       setNotice({ type: 'err', text: `查询失败：${e.message}` });
@@ -150,6 +156,11 @@ export default function QueryPage() {
               <span className="badge">{state.departments.find((d) => d.code === state.selectedDepartment)?.name || '未选科室'}</span>
             </div>
             <div className="toolbar" style={{ marginTop: 4 }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <input type="checkbox" checked={!!state.config.notifyOnResults}
+                  onChange={(e) => dispatch({ type: 'config', value: { notifyOnResults: e.target.checked } })} />
+                有号提醒（结果非空时系统通知 + 闹钟声）
+              </label>
               {state.config.autoRefresh ? (
                 <span className={`badge ${nextIn ? 'on' : ''}`}>
                   {nextIn > 0
@@ -175,9 +186,9 @@ export default function QueryPage() {
 function ResultsTable() {
   const { state, dispatch } = useStore();
   const [sort, setSort] = useState({ key: 'date', dir: 1 });
-  const [filter, setFilter] = useState('');
-  const [regex, setRegex] = useState(false);
-  const [field, setField] = useState('all');
+  // Per-column filters; conditions across columns are AND-ed together.
+  const [filters, setFilters] = useState({});
+  const setFilter = (key, patch) => setFilters((prev) => ({ ...prev, [key]: { ...(prev[key] || { text: '', regex: false }), ...patch } }));
 
   const cols = [
     { key: 'date', label: '日期' }, { key: 'department_name', label: '科室' },
@@ -187,52 +198,67 @@ function ResultsTable() {
     { key: 'queried_at', label: '查询时间（北京时间）' }
   ];
 
-  // Build a matcher for text or regex mode. Compile the RegExp once per change;
-  // an invalid pattern is reported instead of throwing during render.
-  const { matcher, regexError } = useMemo(() => {
-    if (!filter) return { matcher: null, regexError: '' };
-    const keys = field === 'all' ? cols.map((c) => c.key) : [field];
-    const values = (row) => keys.map((k) => {
-      const v = row[k];
-      return v === undefined || v === null ? '' : String(v);
-    });
-    if (!regex) {
-      const needle = filter.toLowerCase();
-      return { matcher: (row) => values(row).some((v) => v.toLowerCase().includes(needle)), regexError: '' };
+  // Compile one matcher per non-empty column filter; combine with AND.
+  // Invalid regex is reported per column instead of throwing during render.
+  const { matchers, regexErrors, hasInvalid } = useMemo(() => {
+    const matchers = [], regexErrors = [];
+    for (const c of cols) {
+      const f = filters[c.key];
+      if (!f || !f.text) continue;
+      const value = (row) => { const v = row[c.key]; return v === undefined || v === null ? '' : String(v); };
+      if (!f.regex) {
+        const needle = f.text.toLowerCase();
+        matchers.push({ key: c.key, fn: (row) => value(row).toLowerCase().includes(needle) });
+      } else {
+        try {
+          // Use match() rather than test() so a global flag can't advance lastIndex.
+          const re = new RegExp(f.text, 'i');
+          matchers.push({ key: c.key, fn: (row) => value(row).match(re) !== null });
+        } catch (e) {
+          regexErrors.push(`${c.label}：${e.message || '无效正则表达式'}`);
+        }
+      }
     }
-    try {
-      // Use match() rather than test() so a global flag can't advance lastIndex.
-      const re = new RegExp(filter, 'i');
-      return { matcher: (row) => values(row).some((v) => v.match(re) !== null), regexError: '' };
-    } catch (e) {
-      return { matcher: null, regexError: e.message || '无效正则表达式' };
-    }
-  }, [filter, regex, field]); // eslint-disable-line react-hooks/exhaustive-deps
+    return { matchers, regexErrors, hasInvalid: regexErrors.length > 0 };
+  }, [filters]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (state.stale) return <div className="notice info">结果已过期，请重新查询;旧数据不可用于挂号。</div>;
   if (state.rows.length === 0) return <div className="captcha-img" style={{ height: 100 }}>暂无号源数据，请先查询。</div>;
 
-  let rows = matcher ? state.rows.filter(matcher) : (filter && regex ? [] : state.rows);
+  // AND semantics: a row must satisfy every active (valid) column condition.
+  let rows = state.rows.filter((row) => matchers.every((m) => m.fn(row)));
   rows = [...rows].sort((a, b) => {
     const av = a[sort.key], bv = b[sort.key];
     return String(av ?? '').localeCompare(String(bv ?? ''), 'zh-CN', { numeric: true }) * sort.dir;
   });
   return (
     <>
-      <div className="toolbar">
-        <input value={filter} onChange={(e) => setFilter(e.target.value)}
-          placeholder={regex ? '正则表达式（如 ^张.*医）' : '筛选'} style={{ maxWidth: 260 }} />
-        <select value={field} onChange={(e) => setField(e.target.value)}>
-          <option value="all">全部列</option>
-          {cols.map((c) => <option key={c.key} value={c.key}>{c.label}</option>)}
-        </select>
-        <label style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <input type="checkbox" checked={regex} onChange={(e) => setRegex(e.target.checked)} />
-          正则
-        </label>
-        <span className="badge">{rows.length} 行</span>
+      <div style={{ marginBottom: 10 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+          <b style={{ fontSize: 13 }}>多列筛选（各列条件同时满足 AND）</b>
+          <button className="btn" style={{ padding: '3px 10px', fontSize: 12 }}
+            onClick={() => setFilters({})}>清空筛选</button>
+        </div>
+        <div className="filter-grid">
+          {cols.map((c) => {
+            const f = filters[c.key] || { text: '', regex: false };
+            return (
+              <div key={c.key} className="filter-cell">
+                <input value={f.text} onChange={(e) => setFilter(c.key, { text: e.target.value })}
+                  placeholder={c.label} title={`按「${c.label}」筛选；多个医生可用正则，如 张医生|李医生`} />
+                <button type="button" className={f.regex ? 'regex-btn on' : 'regex-btn'}
+                  title="切换正则模式（支持 A|B、^、$、字符类等）"
+                  onClick={() => setFilter(c.key, { regex: !f.regex })}>.*</button>
+              </div>
+            );
+          })}
+        </div>
+        <div className="toolbar" style={{ marginTop: 6 }}>
+          <span className="badge">{rows.length} 行</span>
+          {matchers.length > 0 && <span className="badge">生效条件 {matchers.length} 个</span>}
+        </div>
       </div>
-      {regexError && <div className="notice err">正则表达式无效：{regexError}</div>}
+      {hasInvalid && <div className="notice err">正则无效：{regexErrors.join('；')}</div>}
       <div style={{ overflow: 'auto', maxHeight: 420 }}>
         <table className="grid">
           <thead><tr>{cols.map((c) => <th key={c.key} onClick={() => setSort({ key: c.key, dir: sort.key === c.key ? -sort.dir : 1 })}>{c.label}</th>)}</tr></thead>

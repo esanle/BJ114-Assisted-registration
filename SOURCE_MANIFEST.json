@@ -37,8 +37,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 14110,
-      "sha256": "fa50941228461e906cf4ad4a3e6b3bcce821c9ad115036ab27c29cb538b8ca78"
+      "bytes": 14372,
+      "sha256": "4487ee9d91223616913f72e01a6c51a9f9c43a0ec725ddee175ba0486e47f56d"
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",
@@ -351,29 +351,29 @@
       "sha256": "5ab3b9c853621fa4d2cc1f2137ab55cabe955c0ef99b7f0a3584051c86889f9a"
     },
     {
-      "path": "ui/dist/assets/index-COfrbUH5.js",
-      "bytes": 253620,
-      "sha256": "5d1b8bf26910942ee79f54babde2875590a34de076615ad1abc9d0f3c8bb1f59"
+      "path": "ui/dist/assets/index-C0Ha3M5F.css",
+      "bytes": 5105,
+      "sha256": "c25d66b659b73887c7c2d6e334d5d8f9467814554883e7ddc4f37d4ea25e7b6d"
     },
     {
-      "path": "ui/dist/assets/index-CdJqOdW1.css",
-      "bytes": 4466,
-      "sha256": "ad25c9cd2c6056941d0e050aa83e2cbbbb05ef7868920b60d95ccdc17cc4a402"
+      "path": "ui/dist/assets/index-CaBEZVAH.js",
+      "bytes": 254965,
+      "sha256": "83eb9efbb8e56cd157504c3faf9eb114e28483304c25e643d6a1ae6d175b0a57"
     },
     {
       "path": "ui/dist/index.html",
       "bytes": 408,
-      "sha256": "dbf00747892557c7bdc6822b203b40f1666c3791cea5b55091c4ff8e778ce5ba"
+      "sha256": "7cb2294569d19f2da71bf203f40ab101f05ded40ac24ff7a8ad624d4973d15a8"
     },
     {
       "path": "ui/electron/main.cjs",
-      "bytes": 4403,
-      "sha256": "96cbfbe84d7acbfc2188c3448399d25702ed53489e478e6fd9b721f914ecd328"
+      "bytes": 5804,
+      "sha256": "5666697bf30279fdcb6e8245b1e95ff6a4996f4fba6a9382173e76085f85068f"
     },
     {
       "path": "ui/electron/preload.cjs",
-      "bytes": 354,
-      "sha256": "a0b247aa656eb1fdfe24c5d5c194cc195db2bf279b40ef104240630f6902fb53"
+      "bytes": 481,
+      "sha256": "6411a3513dcc406c16ef1b4c3f041f57f5b1ff31d37e0f0687fe2aa5cabd69c5"
     },
     {
       "path": "ui/index.html",
@@ -412,8 +412,8 @@
     },
     {
       "path": "ui/src/QueryPage.jsx",
-      "bytes": 12150,
-      "sha256": "ab17ff6d81bb9de6122565fd94ac6cbc9a8200e60ee0b07cdeed2a99d279794d"
+      "bytes": 13911,
+      "sha256": "ab54bfb48b82bb6a3fb63560d50191018179aa3545e7ecc0365709b43238ee36"
     },
     {
       "path": "ui/src/SettingsPage.jsx",
@@ -427,18 +427,18 @@
     },
     {
       "path": "ui/src/rpc.js",
-      "bytes": 6350,
-      "sha256": "793f86a08a5ac301343ce9292636828c8db1926aa09a9fa103c6d0d4b7b8e771"
+      "bytes": 6611,
+      "sha256": "3d5b20253c382af6f4fd48246c52804fd4b585fa79394b6ab36724755092bd96"
     },
     {
       "path": "ui/src/store.jsx",
-      "bytes": 1723,
-      "sha256": "07943e50e8fb3519dd19afe827d32cfbea32727f1629f357b898be733ead1723"
+      "bytes": 1747,
+      "sha256": "725225af7c134a8bcda205269113ea0c9ed7570e145baac210629b36f3daf812"
     },
     {
       "path": "ui/src/styles.css",
-      "bytes": 5117,
-      "sha256": "f9b0285d915e453af3e77774fbd17445dbad283c5fd6f448f4cec9cbaf252886"
+      "bytes": 5842,
+      "sha256": "ba6a5ba472f92262cffb3ed8d8d0202cb52484124e35d775c9bcd46efe1f4d8b"
     },
     {
       "path": "ui/vite.config.js",
