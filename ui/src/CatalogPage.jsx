@@ -4,7 +4,8 @@ import { useStore } from './store.jsx';
 
 export default function CatalogPage({ onQuery }) {
   const { state, dispatch } = useStore();
-  const [search, setSearch] = useState('');
+  const search = state.catalogSearch;
+  const setSearch = (v) => dispatch({ type: 'catalogSearch', value: v });
   const [notice, setNotice] = useState({ type: 'info', text: '' });
   const [busy, setBusy] = useState(false);
 
@@ -34,11 +35,8 @@ export default function CatalogPage({ onQuery }) {
       Object.values(h).some((v) => String(v).toLowerCase().includes(q)));
   }, [state.hospitals, search]);
 
-  const selectHospital = async (h) => {
-    const code = h.hospital_code || h['编码'];
-    const name = h.hospital_name || h['医院'];
-    dispatch({ type: 'hospital', value: code });
-    setNotice({ type: 'info', text: `已选择 ${name}，正在加载科室…` });
+  const loadDepartmentsFor = async (code, name) => {
+    setNotice({ type: 'info', text: `正在加载 ${name} 的科室…` });
     setBusy(true);
     try {
       const r = await rpcCall('departments', { hospital_code: code });
@@ -53,6 +51,21 @@ export default function CatalogPage({ onQuery }) {
     } finally {
       setBusy(false);
     }
+  };
+
+  // Restore the persisted hospital's department list on mount.
+  useEffect(() => {
+    if (state.selectedHospital && state.departments.length === 0) {
+      const h = state.hospitals.find((x) => (x.hospital_code || x['编码']) === state.selectedHospital);
+      loadDepartmentsFor(state.selectedHospital, h?.hospital_name || h?.['医院'] || state.selectedHospital);
+    }
+  }, [state.selectedHospital, state.hospitals]); // eslint-disable-line
+
+  const selectHospital = async (h) => {
+    const code = h.hospital_code || h['编码'];
+    const name = h.hospital_name || h['医院'];
+    dispatch({ type: 'hospital', value: code });
+    loadDepartmentsFor(code, name);
   };
 
   return (

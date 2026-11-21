@@ -37,8 +37,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 14372,
-      "sha256": "4487ee9d91223616913f72e01a6c51a9f9c43a0ec725ddee175ba0486e47f56d"
+      "bytes": 14725,
+      "sha256": "d6141746a6c63e52f4b4b89d9f0d43fbff1d75865b3a5a943697d2e337982013"
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",
@@ -351,19 +351,19 @@
       "sha256": "5ab3b9c853621fa4d2cc1f2137ab55cabe955c0ef99b7f0a3584051c86889f9a"
     },
     {
-      "path": "ui/dist/assets/index-C0Ha3M5F.css",
-      "bytes": 5105,
-      "sha256": "c25d66b659b73887c7c2d6e334d5d8f9467814554883e7ddc4f37d4ea25e7b6d"
+      "path": "ui/dist/assets/index-CgNMM87q.js",
+      "bytes": 257660,
+      "sha256": "b575ff3c02b1c612715d840158a386541855ebd76ff2ddff27c4332a13c0def2"
     },
     {
-      "path": "ui/dist/assets/index-CaBEZVAH.js",
-      "bytes": 254965,
-      "sha256": "83eb9efbb8e56cd157504c3faf9eb114e28483304c25e643d6a1ae6d175b0a57"
+      "path": "ui/dist/assets/index-DUwjggqS.css",
+      "bytes": 5833,
+      "sha256": "c32100809827795b8d693d04c49c8f93e898ec8813f061a7416782227bc65184"
     },
     {
       "path": "ui/dist/index.html",
       "bytes": 408,
-      "sha256": "7cb2294569d19f2da71bf203f40ab101f05ded40ac24ff7a8ad624d4973d15a8"
+      "sha256": "5304fc3384bed4abf4ae2cdfde32f566237eed2fb3260a0b8ec0e4da76b0a52f"
     },
     {
       "path": "ui/electron/main.cjs",
@@ -402,8 +402,8 @@
     },
     {
       "path": "ui/src/CatalogPage.jsx",
-      "bytes": 4710,
-      "sha256": "9527f2e3163df20ae6571dd63221b45b43f1d9eb1492823b9102e4c72fe056d4"
+      "bytes": 5313,
+      "sha256": "4d545fa42af587e673fa15c30caa0f87e868a080dc15ac4d854d1b3271e7f219"
     },
     {
       "path": "ui/src/LoginPage.jsx",
@@ -412,8 +412,8 @@
     },
     {
       "path": "ui/src/QueryPage.jsx",
-      "bytes": 13911,
-      "sha256": "ab54bfb48b82bb6a3fb63560d50191018179aa3545e7ecc0365709b43238ee36"
+      "bytes": 16020,
+      "sha256": "2d067f6ae84e7b291b7ebb0d9dbf99e019e5a2f5ef89c0235140a1516a8680ec"
     },
     {
       "path": "ui/src/SettingsPage.jsx",
@@ -432,13 +432,13 @@
     },
     {
       "path": "ui/src/store.jsx",
-      "bytes": 1747,
-      "sha256": "725225af7c134a8bcda205269113ea0c9ed7570e145baac210629b36f3daf812"
+      "bytes": 3953,
+      "sha256": "34209f0151fb35d1102d123666bdc1149da15481e71ba6ab5454ecc711bbcfd2"
     },
     {
       "path": "ui/src/styles.css",
-      "bytes": 5842,
-      "sha256": "ba6a5ba472f92262cffb3ed8d8d0202cb52484124e35d775c9bcd46efe1f4d8b"
+      "bytes": 6670,
+      "sha256": "f779c2d436568465ee11f1e16a99f7c695e91179d02887fc8c8568f233b1eff5"
     },
     {
       "path": "ui/vite.config.js",

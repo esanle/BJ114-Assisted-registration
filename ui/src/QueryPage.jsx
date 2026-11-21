@@ -5,6 +5,21 @@ import { useStore } from './store.jsx';
 const WEEK = ['一', '二', '三', '四', '五', '六', '日'];
 const ymd = (d) => `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
 
+// Only a real bookable doctor slot with positive remaining inventory counts as
+// "有号". Calendar/day summary rows, 候补(product_status=8), unknown/empty
+// remaining, and non-bookable rows must NOT trigger the alert.
+function bookableRows(rows) {
+  return (rows || []).filter((r) => {
+    if (r.booking_supported === false) return false;
+    if (String(r.product_status) === '8') return false;        // 候补行
+    const kind = r.row_kind;
+    if (kind === 'department_calendar' || kind === 'date_unavailable') return false; // 无号摘要行
+    const remaining = r.remaining;
+    if (typeof remaining !== 'number' || remaining <= 0) return false;  // 剩余未知/0
+    return true;
+  });
+}
+
 function MiniCalendar({ selected, onToggle }) {
   const today = new Date();
   const [view, setView] = useState({ y: today.getFullYear(), m: today.getMonth() });
@@ -46,6 +61,7 @@ export default function QueryPage() {
   const { state, dispatch } = useStore();
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState({ type: 'info', text: '' });
+  const [alarm, setAlarm] = useState(null);   // active alarm dialog payload
   const [nextIn, setNextIn] = useState(0);
   const [nextDelay, setNextDelay] = useState(0);
   const timerRef = useRef(null);
@@ -118,11 +134,13 @@ export default function QueryPage() {
       }
       dispatch({ type: 'rows', value: allRows });
       setNotice({ type: 'ok', text: `查询完成，共 ${allRows.length} 行。` + (automatic ? '（自动刷新）' : '') });
-      // Alert when results are non-empty and the checkbox is on.
-      if (state.config.notifyOnResults && allRows.length > 0) {
-        const bookable = allRows.filter((r) => String(r.product_status) !== '8').length;
-        notify('辅助挂号软件 · 有号提醒', `本次查到 ${allRows.length} 行号源（可挂号 ${bookable} 行），请及时查看。`);
-        playAlarm(3);
+      // Alert only when there is a genuinely bookable slot with remaining > 0.
+      const bookable = bookableRows(allRows);
+      if (state.config.notifyOnResults && bookable.length > 0) {
+        const detail = bookable.slice(0, 8).map((r) => `${r.date || ''} ${r.doctor_name || ''} ${r.period || ''}`).join('；');
+        notify('辅助挂号软件 · 有号提醒', `查到 ${bookable.length} 个可挂号号源：${detail}`);
+        // Show a modal dialog; the ringing continues until the user dismisses it.
+        setAlarm({ count: bookable.length, detail, at: new Date().toLocaleTimeString('zh-CN', { hour12: false }) });
       }
       ok = true;
     } catch (e) {
@@ -179,6 +197,35 @@ export default function QueryPage() {
         <h2>查询结果</h2>
         <ResultsTable />
       </div>
+      {alarm && <AlarmDialog alarm={alarm} onDismiss={() => setAlarm(null)} />}
+    </div>
+  );
+}
+
+// Ringing modal: starts an alarm that repeats until the user acknowledges.
+function AlarmDialog({ alarm, onDismiss }) {
+  useEffect(() => {
+    let live = true;
+    const ring = async () => {
+      while (live) {
+        await playAlarm(1);          // one ring per cycle; loop until dismissed
+        if (live) await new Promise((r) => setTimeout(r, 2000));
+      }
+    };
+    ring();
+    return () => { live = false; }; // stop looping when this component unmounts
+  }, []);
+
+  return (
+    <div className="modal-backdrop">
+      <div className="modal-card">
+        <div className="modal-icon">🔔</div>
+        <h2>有号提醒</h2>
+        <p>查到 <b>{alarm.count}</b> 个可挂号号源（{alarm.at}）</p>
+        <p className="modal-detail">{alarm.detail}</p>
+        <p className="modal-hint">请到官方平台核对并选择;本程序不自动挂号。</p>
+        <button className="btn primary modal-btn" onClick={onDismiss}>知道了，停止提醒</button>
+      </div>
     </div>
   );
 }
@@ -186,9 +233,10 @@ export default function QueryPage() {
 function ResultsTable() {
   const { state, dispatch } = useStore();
   const [sort, setSort] = useState({ key: 'date', dir: 1 });
-  // Per-column filters; conditions across columns are AND-ed together.
-  const [filters, setFilters] = useState({});
-  const setFilter = (key, patch) => setFilters((prev) => ({ ...prev, [key]: { ...(prev[key] || { text: '', regex: false }), ...patch } }));
+  // Per-column filters live in the store (persisted); across columns they are AND-ed.
+  const filters = state.filters;
+  const setFilter = (key, patch) => dispatch({ type: 'filter', key, patch });
+  const clearFilters = () => dispatch({ type: 'clearFilters' });
 
   const cols = [
     { key: 'date', label: '日期' }, { key: 'department_name', label: '科室' },
@@ -237,7 +285,7 @@ function ResultsTable() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
           <b style={{ fontSize: 13 }}>多列筛选（各列条件同时满足 AND）</b>
           <button className="btn" style={{ padding: '3px 10px', fontSize: 12 }}
-            onClick={() => setFilters({})}>清空筛选</button>
+            onClick={clearFilters}>清空筛选</button>
         </div>
         <div className="filter-grid">
           {cols.map((c) => {
