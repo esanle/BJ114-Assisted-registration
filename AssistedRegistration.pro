@@ -17,4 +17,5 @@ win32:exists("$$CURL_ROOT/lib/libcurl.lib") {
     LIBS += -lcurl
 }
 win32-msvc*: QMAKE_CXXFLAGS += /utf-8
+macx: LIBS += -framework Security
 DESTDIR = $$PWD/bin

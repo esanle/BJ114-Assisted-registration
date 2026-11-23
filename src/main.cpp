@@ -22,6 +22,61 @@ static QStringList csvLine(const QString &line) {
  QStringList out;QString value;bool quote=false;
  for(int i=0;i<line.size();++i){QChar c=line[i];if(c=='"'){if(quote&&i+1<line.size()&&line[i+1]=='"'){value+='"';++i;}else quote=!quote;}else if(c==','&&!quote){out<<value;value.clear();}else value+=c;}out<<value;return out;
 }
+// Force a light, high-contrast theme regardless of the host OS palette.
+// Applied on QApplication (so it covers every widget, including fixtures that
+// include main.cpp and construct Window directly) with a one-shot guard.
+static void applyLightTheme() {
+ QApplication *app=qobject_cast<QApplication *>(QCoreApplication::instance());
+ if(!app)return;
+ static bool applied=false;
+ if(applied)return;
+ applied=true;
+ QPalette light;
+ light.setColor(QPalette::Window,QColor("#ffffff"));
+ light.setColor(QPalette::WindowText,QColor("#243043"));
+ light.setColor(QPalette::Base,QColor("#ffffff"));
+ light.setColor(QPalette::AlternateBase,QColor("#f6f9fd"));
+ light.setColor(QPalette::Text,QColor("#243043"));
+ light.setColor(QPalette::Button,QColor("#f7f9fc"));
+ light.setColor(QPalette::ButtonText,QColor("#243043"));
+ light.setColor(QPalette::ToolTipBase,QColor("#243043"));
+ light.setColor(QPalette::ToolTipText,QColor("#ffffff"));
+ light.setColor(QPalette::Highlight,QColor("#2458d3"));
+ light.setColor(QPalette::HighlightedText,QColor("#ffffff"));
+ light.setColor(QPalette::Disabled,QPalette::WindowText,QColor("#9aa6b8"));
+ light.setColor(QPalette::Disabled,QPalette::Text,QColor("#9aa6b8"));
+ light.setColor(QPalette::Disabled,QPalette::ButtonText,QColor("#9aa6b8"));
+ app->setPalette(light);
+ app->setStyleSheet(QStringLiteral(R"LIGHT(
+QWidget{background:#ffffff;color:#243043;}
+QMainWindow,QDialog{background:#ffffff;}
+QGroupBox{background:#ffffff;border:1px solid #dce4ef;border-radius:8px;margin-top:10px;}
+QGroupBox::title{subcontrol-origin:margin;left:12px;padding:0 4px;color:#33415c;font-weight:600;}
+QLabel{color:#243043;padding:2px;}
+QPushButton{background:#f7f9fc;border:1px solid #cdd7e6;border-radius:6px;padding:6px 12px;color:#243043;}
+QPushButton:hover{background:#eaf1ff;border-color:#7ea6ff;}
+QPushButton:pressed{background:#dce8ff;}
+QPushButton:disabled{background:#f2f4f8;color:#9aa6b8;border-color:#e3e8f0;}
+QCheckBox,QRadioButton{color:#243043;spacing:6px;}
+QLineEdit,QSpinBox,QComboBox,QDateEdit{background:#ffffff;border:1px solid #cdd7e6;border-radius:6px;padding:5px 8px;color:#243043;selection-background-color:#2458d3;}
+QLineEdit:focus,QSpinBox:focus,QComboBox:focus,QDateEdit:focus{border-color:#4f6bff;}
+QTableWidget,QTableView{background:#ffffff;alternate-background-color:#f6f9fd;gridline-color:#e3e9f2;border:1px solid #dce4ef;border-radius:6px;selection-background-color:#dbe7ff;selection-color:#102a6b;}
+QHeaderView::section{background:#f0f4fa;color:#33415c;border:0;border-right:1px solid #dce4ef;border-bottom:1px solid #dce4ef;padding:6px;font-weight:600;}
+QListWidget{background:#ffffff;border:1px solid #dce4ef;border-radius:6px;}
+QTreeWidget{background:#ffffff;border:1px solid #dce4ef;border-radius:6px;}
+QPlainTextEdit,QTextEdit{background:#ffffff;border:1px solid #dce4ef;border-radius:6px;color:#243043;}
+QScrollArea{background:#ffffff;border:0;}
+QScrollBar:vertical{background:#f7f9fc;width:11px;}
+QScrollBar::handle:vertical{background:#c9d4e4;border-radius:5px;min-height:24px;}
+QScrollBar::handle:vertical:hover{background:#9fb3d1;}
+QScrollBar::add-line:vertical,QScrollBar::sub-line:vertical{height:0;}
+QScrollBar:horizontal{background:#f7f9fc;height:11px;}
+QScrollBar::handle:horizontal{background:#c9d4e4;border-radius:5px;min-width:24px;}
+QScrollBar::add-line:horizontal,QScrollBar::sub-line:horizontal{width:0;}
+QToolTip{background:#243043;color:#ffffff;border:0;padding:4px 6px;}
+QStatusBar{background:#ffffff;color:#52627b;}
+)LIGHT"));
+}
 static QString queryTimeForDisplay(const QString &value) {
  if(!QRegularExpression(QStringLiteral("(?:Z|[+-][0-9]{2}:[0-9]{2})$")).match(value).hasMatch())return QString::fromUtf8("未知");
  auto time=QDateTime::fromString(value,Qt::ISODateWithMs);if(!time.isValid())time=QDateTime::fromString(value,Qt::ISODate);
@@ -96,7 +151,7 @@ class Window final:public QMainWindow {
  struct DirectTask {DirectBookingThread *thread=nullptr;std::shared_ptr<std::atomic_bool> cancel;quint64 epoch=0;bool resultSeen=false;};QMap<quint64,DirectTask> directTasks_;QJsonObject parallelSession_;quint64 bookingAuthEpoch_=0;bool ownerForgetPending_=false;QSpinBox *bookingParallelThreads_=nullptr;
  bool loggedIn_=false,directSubmissionLocked_=false,directBookingActive_=false;QQueue<QJsonObject> directBookingQueue_;quint64 directBookingRequestId_=0,activeDirectBookingId_=0,directBookingQueueEpoch_=0;QString bookingPreviewId_;QJsonObject bookingPreview_;QJsonArray bookingPatients_;
 public:
- Window(QString root,bool warm,bool autoLogin=true):root_(std::move(root)),autoLoginEnabled_(autoLogin){userActivity_.start();poolRecoveryClock_.start();Broker::prefetchPublicDns();
+ Window(QString root,bool warm,bool autoLogin=true):root_(std::move(root)),autoLoginEnabled_(autoLogin){userActivity_.start();poolRecoveryClock_.start();applyLightTheme();Broker::prefetchPublicDns();
   setWindowTitle(QString::fromUtf8("辅助挂号软件 v1.2.0"));resize(1250,1000);
   auto *central=new QWidget;auto *scroll=new QScrollArea;scroll->setWidgetResizable(true);scroll->setFrameShape(QFrame::NoFrame);scroll->setWidget(central);setCentralWidget(scroll);auto *layout=new QVBoxLayout(central);
   auto *title=new QLabel(QString::fromUtf8("免责协议"));title->setStyleSheet("font-size:16px;font-weight:bold;");layout->addWidget(title);
@@ -139,7 +194,7 @@ public:
   for(auto *input:{phone_,imageCode_,smsCode_})connect(input,&QLineEdit::textChanged,this,[this](const QString &){updateBookingControls();});
   captchaExpiry_.setSingleShot(true);connect(&captchaExpiry_,&QTimer::timeout,this,[this]{clearCaptcha(QString::fromUtf8("图形码已过期，请刷新"));loginState_->setText(QString::fromUtf8("图形验证码已过期，请重新获取。"));updateBookingControls();});
   smsTimer_.setInterval(1000);connect(&smsTimer_,&QTimer::timeout,this,[this]{if(smsSeconds_>0)--smsSeconds_;if(smsSeconds_==0)smsTimer_.stop();updateBookingControls();});
-  setStyleSheet("QPushButton{padding:6px 12px} QTableWidget{alternate-background-color:#f1f4f8} QLabel{padding:2px}");hospitals_->setAlternatingRowColors(true);rows_->setAlternatingRowColors(true);
+  hospitals_->setAlternatingRowColors(true);rows_->setAlternatingRowColors(true);
   hospitalTools_=new BookingTableTools(hospitals_);rowTools_=new BookingTableTools(rows_);
    hospitalTools_->filtersChanged=[this]{const QSignalBlocker blocked(search_);search_->setText(hospitalTools_->globalSearchText());};rowTools_->filtersChanged=[this]{clearBookingPreview();updateBookingControls();};
    auto *tableHint=new QLabel(QString::fromUtf8("表头左键：升序 / 降序；右键：按列筛选、清除筛选。医生来自已查询结果，未查询日期不推测排班。"));tableHint->setWordWrap(true);layout->insertWidget(layout->indexOf(rows_),tableHint);
@@ -157,7 +212,7 @@ public:
   connect(&elapsedTimer_,&QTimer::timeout,this,[this]{const auto &clock=warming_?warmTimer_:jobTimer_;if(clock.isValid()&&(busy_||warming_))performance_->setText((warming_?QString::fromUtf8("自动连接已等待 %1 秒（尚未发起号源查询）"):QString::fromUtf8("任务已等待 %1 秒（含队列、网络和界面处理）")).arg(clock.elapsed()/1000.0,0,'f',3));});elapsedTimer_.start(100);poolRecoveryTimer_.setInterval(1000);connect(&poolRecoveryTimer_,&QTimer::timeout,this,[this]{maintainQueryPool();});poolRecoveryTimer_.start();autoLoginTimer_.setSingleShot(true);connect(&autoLoginTimer_,&QTimer::timeout,this,[this]{if(!autoLoginPending_||closing_)return;if(busy_||warming_||batchActive_||foregroundPoolResetting()){autoLoginTimer_.start(200);return;}autoLoginPending_=false;autoLoginAttempted_=true;autoRestoreActive_=true;bookingAction("booking_restore",{});});if(autoLoginEnabled_&&BookingSessionStore::hasSavedSession()){autoLoginPending_=true;loginState_->setText(QString::fromUtf8("正在恢复本机保存的登录会话，并向官方验证…"));autoLoginTimer_.start(0);}updateControls();Q_UNUSED(warm);
  }
  ~Window()override{for(auto &task:directTasks_)task.cancel->store(true);for(auto &task:directTasks_)if(task.thread&&task.thread->isRunning())task.thread->wait();parallelSession_={};cancel_->store(true);for(auto &slot:querySlots_)slot.cancel->store(true);emit shutdown();for(int slot=0;slot<16;++slot)if(queryThreads_[slot]&&queryThreads_[slot]->isRunning())queryThreads_[slot]->wait();}
- QJsonObject bookingUiState()const{return {{"automatic_login_enabled",autoLoginEnabled_},{"automatic_login_pending",autoLoginPending_},{"automatic_login_attempted",autoLoginAttempted_},{"session_storage","Windows CurrentUser DPAPI"},{"session_captchas_saved",false},{"booking_enabled",true},{"login_controls_present",bool(phone_&&imageCode_&&smsCode_&&login_&&sendSms_)},{"patient_controls_present",bool(patient_&&card_&&previewBooking_&&submitBooking_)},{"manual_connection_preparation",bool(prepareConnection_)},{"automatic_connection_renewal",true},{"automatic_connection_renewal_scope","hospital_selection_and_bounded_background_pool_recovery"},{"connection_pool_auto_recovery",true},{"connection_pool_recovery_enabled",poolRecoveryEnabled_},{"connection_pool_ready_target",poolReadyTarget()},{"connection_pool_recovery_parallel_max",2},{"connection_pool_retry_backoff_max_ms",60000},{"startup_public_network",false},{"selection_public_prewarm",true},{"selection_prewarm_background",true},{"query_connection_threads",queryConnectionCount_},{"query_running_threads",runningQueryThreads()},{"query_ready_connections",readyQueryConnections()},{"query_connection_threads_max",16},{"query_connection_threads_min",1},{"multi_date_calendar",true},{"calendar_doctor_annotations",true},{"table_header_sort_and_filter",true},{"manual_submit_confirmation",false},{"direct_click_submits",true},{"direct_manual_queue",true},{"direct_queued_clicks",directBookingQueue_.size()},{"direct_booking_active",directBookingActive_},{"direct_wire_parallel",true},{"direct_parallel_limit",bookingParallelThreads_->value()},{"direct_in_flight",directTasks_.size()},{"official_waitlist_entry",true},{"native_waitlist_submit",false},{"app_title",windowTitle()}};}
+ QJsonObject bookingUiState()const{return {{"automatic_login_enabled",autoLoginEnabled_},{"automatic_login_pending",autoLoginPending_},{"automatic_login_attempted",autoLoginAttempted_},{"session_storage",BookingSessionStore::storageDescription()},{"session_captchas_saved",false},{"booking_enabled",true},{"login_controls_present",bool(phone_&&imageCode_&&smsCode_&&login_&&sendSms_)},{"patient_controls_present",bool(patient_&&card_&&previewBooking_&&submitBooking_)},{"manual_connection_preparation",bool(prepareConnection_)},{"automatic_connection_renewal",true},{"automatic_connection_renewal_scope","hospital_selection_and_bounded_background_pool_recovery"},{"connection_pool_auto_recovery",true},{"connection_pool_recovery_enabled",poolRecoveryEnabled_},{"connection_pool_ready_target",poolReadyTarget()},{"connection_pool_recovery_parallel_max",2},{"connection_pool_retry_backoff_max_ms",60000},{"startup_public_network",false},{"selection_public_prewarm",true},{"selection_prewarm_background",true},{"query_connection_threads",queryConnectionCount_},{"query_running_threads",runningQueryThreads()},{"query_ready_connections",readyQueryConnections()},{"query_connection_threads_max",16},{"query_connection_threads_min",1},{"multi_date_calendar",true},{"calendar_doctor_annotations",true},{"table_header_sort_and_filter",true},{"manual_submit_confirmation",false},{"direct_click_submits",true},{"direct_manual_queue",true},{"direct_queued_clicks",directBookingQueue_.size()},{"direct_booking_active",directBookingActive_},{"direct_wire_parallel",true},{"direct_parallel_limit",bookingParallelThreads_->value()},{"direct_in_flight",directTasks_.size()},{"official_waitlist_entry",true},{"native_waitlist_submit",false},{"app_title",windowTitle()}};}
  void benchmarkSelect(const QString &code){for(int r=0;r<hospitals_->rowCount();++r)if(hospitals_->item(r,1)->text()==code){hospitals_->setCurrentCell(r,0);debounce_.stop();loadDepartments(false);return;}}
  bool benchmarkQuery(const QString &code,const QString &department,const QString &first,const QList<QDate> &dates,int threads){
   if(dates.isEmpty()||threads<1||threads>16||!configureQueryConnections(threads))return false;{const QSignalBlocker blocked(connectionThreads_);connectionThreads_->setValue(threads);}autoLoad_->setChecked(false);int hospitalRow=-1;for(int r=0;r<hospitals_->rowCount();++r)if(hospitals_->item(r,1)->text()==code){hospitalRow=r;break;}if(hospitalRow<0)return false;hospitals_->setCurrentCell(hospitalRow,0);debounce_.stop();const auto cached=Service::cacheOnly(root_,code);if(cached.isEmpty())return false;jobHospital_=code;completed("departments",cached);int index=-1;for(int i=1;i<department_->count();++i)if(department_->item(i)->data(Qt::UserRole).toString()==department&&(first.isEmpty()||department_->item(i)->data(Qt::UserRole+1).toString()==first)){if(index>=0)return false;index=i;}if(index<0)return false;department_->setCurrentRow(index);calendar_->setSelectedDates(dates);query();return batchActive_;
@@ -446,6 +501,16 @@ private:
    for(int c=0;c<values.size();++c){auto *item=rows_->item(r,c);if(!item){item=new BookingTableItem(values[c]);rows_->setItem(r,c,item);}else if(item->text()!=values[c])item->setText(values[c]);const QString tip=c==8?a.value("queried_at").toString():summary?explanation:c==5?(a.value("registration_fee_status")==QJsonValue("official_encoded")?QString::fromUtf8("旧版官方价格使用数字字体编码，尚未解码；不把编码当作金额。"):QString::fromUtf8("官方价格，单位：元；支付以官方核验及结算为准。")):QString();if(item->toolTip()!=tip)item->setToolTip(tip);}
    rows_->item(r,0)->setData(Qt::UserRole+7,key);if(rows_->item(r,0)->data(Qt::UserRole).toJsonObject()!=a)rows_->item(r,0)->setData(Qt::UserRole,a);double amount=0;QVariant numeric;if(!summary&&registrationFeeNumber(a,amount))numeric=amount;if(rows_->item(r,5)->data(BookingTableItem::SortValueRole)!=numeric)rows_->item(r,5)->setData(BookingTableItem::SortValueRole,numeric);
   }
+  // Incremental refresh reuses row positions, so results can end up in arrival order
+  // rather than the selected-date order produced by rebuildBatchRows(). Move the
+  // existing items into the requested order instead of recreating them, keeping the
+  // item-pointer stability that incremental refresh relies on.
+  if(rows_->rowCount()==visibleKeys.size()){
+   QVector<QVector<QTableWidgetItem*>> grid;grid.reserve(rows_->rowCount());
+   for(int r=0;r<rows_->rowCount();++r){QVector<QTableWidgetItem*> line;line.reserve(rows_->columnCount());for(int c=0;c<rows_->columnCount();++c)line.append(rows_->takeItem(r,c));grid.append(line);}
+   QHash<QByteArray,int> sourceRow;for(int r=0;r<grid.size();++r)if(!grid[r].isEmpty()&&grid[r][0])sourceRow.insert(grid[r][0]->data(Qt::UserRole+7).toByteArray(),r);
+   for(int target=0;target<visibleKeys.size();++target){const int source=sourceRow.value(visibleKeys.at(target),-1);if(source<0)continue;for(int c=0;c<rows_->columnCount();++c)rows_->setItem(target,c,grid[source].value(c,nullptr));}
+  }
   rows_->setSortingEnabled(sorting);rowTools_->refresh();
   if(!selectedKey.isEmpty()){int found=-1;for(int r=0;r<rows_->rowCount();++r)if(rows_->item(r,0)->data(Qt::UserRole+7).toByteArray()==selectedKey&&!rows_->isRowHidden(r)){found=r;break;}if(found>=0)rows_->setCurrentCell(found,0,QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows);else{rows_->clearSelection();rows_->setCurrentItem(nullptr);}}
   rows_->verticalScrollBar()->setValue(scrollV);rows_->horizontalScrollBar()->setValue(scrollH);rows_->setUpdatesEnabled(updates);calendar_->setDoctorRows(visible);updateBookingControls();
@@ -534,7 +599,7 @@ static QString defaultProjectRoot(){
 }
 
 int main(int argc,char**argv){
- QElapsedTimer startup;startup.start();QApplication app(argc,argv);app.setOrganizationName(QStringLiteral("HospitalBooking"));app.setApplicationName(QStringLiteral("HospitalBooking"));auto args=app.arguments();QString root=QDir(arg(args,"--project-root",defaultProjectRoot())).absolutePath();QString output=arg(args,"--output");
+ QElapsedTimer startup;startup.start();QApplication app(argc,argv);app.setOrganizationName(QStringLiteral("HospitalBooking"));app.setApplicationName(QStringLiteral("HospitalBooking"));applyLightTheme();auto args=app.arguments();QString root=QDir(arg(args,"--project-root",defaultProjectRoot())).absolutePath();QString output=arg(args,"--output");
  if(args.contains("--parallel-self-test")){auto result=BookingService::offlineParallelSelfTest();return writeJson(output,result)&&result.value("status").toString()=="PASS"?0:1;}
  if(args.contains("--session-self-test")){auto result=BookingService::offlineSessionSelfTest();return writeJson(output,result)&&result.value("status").toString()=="PASS"?0:1;}
  if(args.contains("--booking-self-test")){auto result=BookingService::offlineSelfTest();return writeJson(output,result)&&result.value("status").toString()=="PASS"?0:1;}

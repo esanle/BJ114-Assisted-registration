@@ -1,5 +1,7 @@
 # 辅助挂号软件 v1.2.0
 
+> **本项目是一个 fork**,在 v1.2.0 上游源码基础上做平台适配与前端重构。`macos-adaptation` 分支新增 macOS 构建、浅色主题、Keychain 会话保存;并把原来的 Qt 单页界面重构为 **Electron + React Web UI**(`ui/`),通过本地 JSON-RPC 复用同一套 C++ 后端。原 Qt 程序仍保留作为参照与回退。fork 仓库:`https://github.com/esanle/BJ114-Assisted-registration`;上游:`https://github.com/ggg1123581321345589/BJ114-Assisted-registration`。
+
 ## 免责协议
 
 本软件为非官方辅助工具，供用户本人查询号源并在人工确认后提交一次预约，不保证号源可用或挂号成功。请遵守医院及官方平台规则，核对就诊人、就诊卡、日期、费用及取退号要求；预约和支付结果以官方平台为准。验证码须由本人输入，遇到提交结果未知时请先核对官方订单，勿重复提交。请妥善保护个人信息，勿用于倒号、代抢或其他违规用途。
@@ -28,11 +30,11 @@
 
 ### 登录与会话恢复
 
-首次使用仍需本人获取并输入验证码完成登录。成功登录后，程序只将经过约束的官方会话 Cookie 保存到 Windows 当前用户的应用数据目录，使用 CurrentUser DPAPI 加密；不把手机号、验证码、就诊人或就诊卡内容写入此会话文件。源码和分发包均不携带真实会话文件或账号数据。
+首次使用仍需本人获取并输入验证码完成登录。成功登录后，程序只将经过约束的官方会话 Cookie 保存到当前用户的应用数据目录：Windows 使用 CurrentUser DPAPI 加密，macOS 使用登录 Keychain 保管 AES-256 密钥；不把手机号、验证码、就诊人或就诊卡内容写入此会话文件。源码和分发包均不携带真实会话文件或账号数据。
 
 普通界面启动发现保存的会话时，会尝试一次后台恢复：解密后创建新会话，先经官方用户接口确认，再加载就诊人及就诊卡。无保存文件时不发起恢复登录请求。会话过期或校验失败仍需本人重新登录；不能保证永久登录。
 
-点击退出登录会先清除本地加密会话，远端退出失败也不应继续保留本地登录；若删除失败，界面会明确提示。DPAPI 将恢复范围限制为当前 Windows 用户，不能替代对电脑和账号的保护。请避免同时运行多个实例：另一实例若已独立验证登录，仍可能再次保存其会话。
+点击退出登录会先清除本地加密会话，远端退出失败也不应继续保留本地登录；若删除失败，界面会明确提示。DPAPI / Keychain 将恢复范围限制为当前系统用户，不能替代对电脑和账号的保护。请避免同时运行多个实例：另一实例若已独立验证登录，仍可能再次保存其会话。
 
 ### 手动并发挂号
 
@@ -102,6 +104,38 @@ Qt、libcurl、编译器与 Node 的二进制不在源码中。应从各项目�
 build.log 用于诊断本机编译错误，不属于发布源码。Windows 运行目录另需匹配的 Qt、libcurl 和 MSVC 运行库；本仓库不将开发机依赖混入源码包。
 
 Windows x64 完整运行包提供 Qt、Node 与所需依赖。完整解压并保留 DLL、platforms、data、runtime、node_modules 等随附文件，再双击“辅助挂号软件 v1.2.0.exe”；不要只移动 EXE。运行包不包含真实账号或会话。
+
+### macOS 构建（社区适配）
+
+官方发行流程仍面向 Windows x64；源码在 macOS（Apple Silicon）上可通过 CMake 构建。已验证环境为 Apple Clang 21、Homebrew `qt@5`（5.15.19）、Node 26 与系统 curl。会话加密保存已在 macOS 适配：Windows 使用 CurrentUser DPAPI，macOS 使用登录 Keychain 保管 AES-256 密钥（仅当前用户、解锁后可用），会话文件位于 `~/Library/Application Support/HospitalBooking/official-session/`。
+
+    brew install qt@5
+    npm ci
+    cmake -S . -B build-macos \
+      -DCMAKE_PREFIX_PATH="$(brew --prefix qt@5)" \
+      -DCMAKE_BUILD_TYPE=Release
+    cmake --build build-macos --parallel 4
+    ctest --test-dir build-macos --output-on-failure
+
+CMake 已接入 `tests/` 下全部离线测试；非 Windows 平台的 GUI fixture 使用 `QT_QPA_PLATFORM=offscreen`，并包含 16 组并行查询调度变体（连接数 1/2/4/16 × 模式 detail/empty/mixed/fastdetail）。`build.cmd` / `run.cmd` 仍是 Windows 专用。
+
+### Web UI 原型(Electron + React)
+
+`ui/` 目录下是一个新的 Web UI 原型,用于把原 Qt 单页界面拆成独立页面(账号登录、医院与科室、号源查询、挂号、设置)。它不替换现有 Qt 程序,而是通过本地 JSON-RPC 复用同一套已验证的 C++ 后端:
+
+- `src/rpc_service.cpp`:headless 本地服务,stdin/stdout JSONL 协议,长驻 `BookingService`(登录状态机)与 `Service`(查询会话)。组织/应用名与老程序一致,因此**能读取老程序保存的会话**并经官方校验恢复。
+- `ui/electron/`:Electron 主进程启动 RPC 服务并转发 IPC;preload 暴露 `window.api.call`。
+- `ui/src/`:React 页面,登录会话只保留脱敏视图,原始 cookie 不进前端。号源查询支持"自动刷新",每次成功后在「刷新间隔 + 随机抖动」(默认 60 秒 + 0~15 秒)后才发起下一次,用随机化打散固定间隔以降低限流概率;失败、停止或切换条件会取消定时任务,不自动重发失败请求。结果表支持多列条件筛选:每列可独立设置文本或正则条件(如医生名填 `张医生|李医生` 并开启正则),各列之间取 AND。可勾选"有号提醒":只有当查到**真正可挂号且剩余号源大于 0** 的号源时(无号日历行、候补行、剩余为空的行都不算)才触发系统通知并弹出提醒对话框,闹钟声持续响直到点击"知道了"才停止。UI 偏好(提醒/自动刷新/并发/间隔配置、医院科室与日期选择、多列筛选、搜索词)持久化在 browser localStorage;登录会话本身仍只在 Keychain/DPAPI,不落入 localStorage。
+
+`--fixture` 模式用合成数据走通全流程(图形码/短信/登录/科室/排班/预览/提交),无需真实账号。构建与运行:
+
+```bash
+cmake -S . -B build-macos -DCMAKE_PREFIX_PATH="$(brew --prefix qt@5)" -DCMAKE_BUILD_TYPE=Release
+cmake --build build-macos --target RegistrationRpc --parallel 4
+cd ui && npm install && npm run build
+ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ node node_modules/electron/install.js  # 如二进制未下载
+cd .. && ./ui/node_modules/.bin/electron ./ui --fixture   # 或去掉 --fixture 用真实会话/官方接口
+```
 
 ## 运行时与隐私
 

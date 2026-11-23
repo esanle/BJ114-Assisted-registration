@@ -35,8 +35,8 @@ int main(int argc,char**argv){QCoreApplication app(argc,argv);QTemporaryDir temp
  auto upper=cookie();upper["domain"]="WWW.114YYGH.COM";check("domain_case_normalized",BookingSessionStore::validatedCookies({upper})[0].toObject().value("domain")==QJsonValue("www.114yygh.com"));
  QJsonArray many;for(int i=0;i<129;++i){auto c=cookie();c["key"]=QString("fixture_%1").arg(i);many.append(c);}check("cookie_count_limit_rejected",rejected(many));
  check("initial_missing_state",BookingSessionStore::load(path).state=="missing");check("initial_saved_probe_false",!BookingSessionStore::hasSavedSessionAt(path));
-#ifdef Q_OS_WIN
- const bool saved=BookingSessionStore::save(input,path);check("current_user_dpapi_save",saved);const auto encrypted=bytes(path);
+#if defined(Q_OS_WIN) || defined(Q_OS_MACOS)
+ const bool saved=BookingSessionStore::save(input,path);check("current_user_secure_save",saved);const auto encrypted=bytes(path);
  check("ciphertext_magic",encrypted.startsWith("HBSESS1\n"));check("ciphertext_hides_cookie_value",!encrypted.contains("synthetic-offline-cookie"));
  check("ciphertext_hides_cookie_key",!encrypted.contains("fixture_session"));check("ciphertext_hides_cookie_domain",!encrypted.contains("114yygh.com"));
  check("saved_probe_true",BookingSessionStore::hasSavedSessionAt(path));const auto loaded=BookingSessionStore::load(path);

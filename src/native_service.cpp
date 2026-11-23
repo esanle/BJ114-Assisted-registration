@@ -120,7 +120,7 @@ void lexicalCacheKeys(const QByteArray &raw){
     const auto token=raw.mid(start,end-start+1);const QString key=QJsonDocument::fromJson(QByteArray("[")+token+QByteArray("]")).array().at(0).toString();if(objects.last().contains(key))throw Failure(S("metadata_cache_duplicate_key"));objects.last().insert(key);
     if(depth==1&&key==S("schema_version")){int n=next+1;while(n<raw.size()&&std::isspace(static_cast<unsigned char>(raw.at(n))))++n;int endNumber=n;while(endNumber<raw.size()&&raw.at(endNumber)!=','&&raw.at(endNumber)!='}')++endNumber;if(raw.mid(n,endNumber-n).trimmed()!=QByteArray("1"))throw Failure(S("metadata_cache_identity_invalid"));schema=true;}
    }
-  }else if(c=='{'||c=='['){++depth;stack.append(c);if(c=='{')objects.append({});}else if(c=='}'||c==']'){--depth;if(c=='}')objects.removeLast();stack.removeLast();}
+  }else if(c=='{'||c=='['){++depth;stack.append(c);if(c=='{')objects.append(QSet<QString>{});}else if(c=='}'||c==']'){--depth;if(c=='}')objects.removeLast();stack.removeLast();}
  }if(!schema)throw Failure(S("metadata_cache_identity_invalid"));
 }
 QJsonObject readCache(const QString &root,const QString &code){
