@@ -37,8 +37,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 14725,
-      "sha256": "d6141746a6c63e52f4b4b89d9f0d43fbff1d75865b3a5a943697d2e337982013"
+      "bytes": 15225,
+      "sha256": "d0337235bc3095acad0e553d9fe5310f621d10a4e2de6bb1e52065ab31156db3"
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",
@@ -351,9 +351,9 @@
       "sha256": "5ab3b9c853621fa4d2cc1f2137ab55cabe955c0ef99b7f0a3584051c86889f9a"
     },
     {
-      "path": "ui/dist/assets/index-CgNMM87q.js",
-      "bytes": 257660,
-      "sha256": "b575ff3c02b1c612715d840158a386541855ebd76ff2ddff27c4332a13c0def2"
+      "path": "ui/dist/assets/index-CSRVhl5l.js",
+      "bytes": 258115,
+      "sha256": "f8a9f867de22167a29caba2d625775a357a0bc996f16b014b7538a3f2c308cbf"
     },
     {
       "path": "ui/dist/assets/index-DUwjggqS.css",
@@ -363,7 +363,7 @@
     {
       "path": "ui/dist/index.html",
       "bytes": 408,
-      "sha256": "5304fc3384bed4abf4ae2cdfde32f566237eed2fb3260a0b8ec0e4da76b0a52f"
+      "sha256": "33f76bc87727dff42166f06eab07acb43397b2cf8664ec9b509d615ace035c8d"
     },
     {
       "path": "ui/electron/main.cjs",
@@ -407,8 +407,8 @@
     },
     {
       "path": "ui/src/LoginPage.jsx",
-      "bytes": 6577,
-      "sha256": "b3ca53f221d331be9bb0d0c3ce32594ffaa7a8e583f917f6c14f3f0db6fb3b85"
+      "bytes": 7511,
+      "sha256": "b01b64e77818e2f0ab100db2cdd50f0ef8a526d37f2b97f3f74e1dd8b9b6426b"
     },
     {
       "path": "ui/src/QueryPage.jsx",

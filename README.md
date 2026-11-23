@@ -1,5 +1,7 @@
 # 辅助挂号软件 v1.2.0
 
+> **本项目是一个 fork**,在 v1.2.0 上游源码基础上做平台适配与前端重构。`macos-adaptation` 分支新增 macOS 构建、浅色主题、Keychain 会话保存;并把原来的 Qt 单页界面重构为 **Electron + React Web UI**(`ui/`),通过本地 JSON-RPC 复用同一套 C++ 后端。原 Qt 程序仍保留作为参照与回退。fork 仓库:`https://github.com/esanle/BJ114-Assisted-registration`;上游:`https://github.com/ggg1123581321345589/BJ114-Assisted-registration`。
+
 ## 免责协议
 
 本软件为非官方辅助工具，供用户本人查询号源并在人工确认后提交一次预约，不保证号源可用或挂号成功。请遵守医院及官方平台规则，核对就诊人、就诊卡、日期、费用及取退号要求；预约和支付结果以官方平台为准。验证码须由本人输入，遇到提交结果未知时请先核对官方订单，勿重复提交。请妥善保护个人信息，勿用于倒号、代抢或其他违规用途。

@@ -71,11 +71,30 @@ export default function LoginPage() {
 
   const getCaptcha = () => run('booking_captcha', {}, () => { setCaptcha(''); setImage(null); });
   const sendSms = () => run('booking_sms', { phone: phone.trim(), captcha: captcha.trim() });
-  const login = () => {
+  const login = async () => {
     if (!terms) { setNotice({ type: 'err', text: '请先阅读并同意官方用户协议和隐私政策。' }); return; }
-    run('booking_login', { phone: phone.trim(), sms_code: smsCode.trim() }, (r) => {
-      setSession({ logged_in: true, authenticated: !!r.authenticated, patients: [] });
-    });
+    setBusy(true);
+    setNotice({ type: 'info', text: '登录中…' });
+    try {
+      const r = await rpcCall('booking_login', { phone: phone.trim(), sms_code: smsCode.trim() });
+      if (!(r.ok || r.status === 'complete')) {
+        setNotice({ type: 'err', text: r.message || r.failure || '登录失败' });
+        return;
+      }
+      // booking_login does not return patients; load them right after so the
+      // first login already has patient/card options (no manual refresh needed).
+      let patients = [];
+      try {
+        const pr = await rpcCall('booking_patients', {});
+        if (pr.ok || pr.status === 'complete') patients = pr.patients || [];
+      } catch { /* patients can be loaded later via the refresh button */ }
+      setSession({ logged_in: true, authenticated: !!r.authenticated, patients });
+      setNotice({ type: 'ok', text: (r.message || '登录成功') + (patients.length ? ` 已加载 ${patients.length} 位就诊人。` : '') });
+    } catch (e) {
+      setNotice({ type: 'err', text: `登录失败：${e.message}` });
+    } finally {
+      setBusy(false);
+    }
   };
   const logout = () => run('booking_logout', {}, () => {
     setSession({ logged_in: false, authenticated: false, patients: [] });
