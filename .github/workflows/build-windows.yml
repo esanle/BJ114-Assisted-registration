@@ -70,8 +70,9 @@ jobs:
           Copy-Item ui\package.json $stage\
 
           # Backend executable + Qt runtime DLLs via windeployqt
+          # CMAKE_RUNTIME_OUTPUT_DIRECTORY sends binaries to the repo-level bin\
           New-Item -ItemType Directory -Force -Path "$stage\bin" | Out-Null
-          Copy-Item build-win\RegistrationRpc.exe $stage\bin\
+          Copy-Item bin\RegistrationRpc.exe $stage\bin\
           windeployqt $stage\bin\RegistrationRpc.exe --no-translations --no-system-d3d-compiler --no-opengl-sw
           # Ensure the Windows platform plugin is present
           New-Item -ItemType Directory -Force -Path "$stage\bin\platforms" | Out-Null
