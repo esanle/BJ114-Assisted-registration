@@ -51,6 +51,10 @@ jobs:
             -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT\scripts\buildsystems\vcpkg.cmake"
           cmake --build build-win --target RegistrationRpc --parallel 4
 
+      - name: Install runtime dependencies (root)
+        shell: pwsh
+        run: npm ci
+
       - name: Build React frontend
         shell: pwsh
         working-directory: ui
