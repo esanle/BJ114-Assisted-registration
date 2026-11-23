@@ -1,0 +1,108 @@
+name: Build Windows package
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*-windows*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Qt 5.15.2 (MSVC x64)
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '5.15.2'
+          host: 'windows'
+          target: 'desktop'
+          arch: 'win64_msvc2019_64'
+          modules: 'qtnetworkauth'
+          cache: true
+
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Install curl via vcpkg
+        shell: pwsh
+        run: |
+          vcpkg install curl:x64-windows
+          echo "CURL_ROOT=$env:VCPKG_INSTALLATION_ROOT\installed\x64-windows" >> $env:GITHUB_ENV
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Build C++ backend (RegistrationRpc)
+        shell: pwsh
+        run: |
+          cmake -S . -B build-win -G "NMake Makefiles" `
+            -DCMAKE_BUILD_TYPE=Release `
+            -DCMAKE_PREFIX_PATH="$env:QT_ROOT_DIR" `
+            -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT\scripts\buildsystems\vcpkg.cmake"
+          cmake --build build-win --target RegistrationRpc --parallel 4
+
+      - name: Build React frontend
+        shell: pwsh
+        working-directory: ui
+        run: |
+          npm ci
+          npm run build
+
+      - name: Stage packaged app
+        shell: pwsh
+        run: |
+          $stage = "packaging\win\AssistedRegistration-win-x64\app"
+          New-Item -ItemType Directory -Force -Path $stage | Out-Null
+
+          # UI files
+          Copy-Item -Recurse ui\dist $stage\
+          Copy-Item -Recurse ui\electron $stage\
+          Copy-Item ui\package.json $stage\
+
+          # Backend executable + Qt runtime DLLs via windeployqt
+          New-Item -ItemType Directory -Force -Path "$stage\bin" | Out-Null
+          Copy-Item build-win\RegistrationRpc.exe $stage\bin\
+          windeployqt $stage\bin\RegistrationRpc.exe --no-translations --no-system-d3d-compiler --no-opengl-sw
+          # Ensure the Windows platform plugin is present
+          New-Item -ItemType Directory -Force -Path "$stage\bin\platforms" | Out-Null
+          Copy-Item "$env:QT_ROOT_DIR\plugins\platforms\qwindows.dll" "$stage\bin\platforms\" -ErrorAction SilentlyContinue
+
+          # Node runtime (Windows x64 official)
+          $nodeZip = "node-v24.16.0-win-x64.zip"
+          Invoke-WebRequest -Uri "https://nodejs.org/dist/v24.16.0/$nodeZip" -OutFile $nodeZip
+          Expand-Archive -Path $nodeZip -DestinationPath packaging\win\node-tmp
+          New-Item -ItemType Directory -Force -Path "$stage\node" | Out-Null
+          Copy-Item "packaging\win\node-tmp\node-v24.16.0-win-x64\node.exe" "$stage\node\node.exe"
+
+          # Runtime data & node_modules
+          Copy-Item -Recurse runtime $stage\
+          Copy-Item -Recurse data $stage\
+          Copy-Item -Recurse node_modules $stage\
+
+          # Electron runtime (electron.exe + DLLs)
+          Copy-Item -Recurse ui\node_modules\electron\dist\* "packaging\win\AssistedRegistration-win-x64\"
+
+      - name: Create zip
+        shell: pwsh
+        run: |
+          Compress-Archive -Path "packaging\win\AssistedRegistration-win-x64\*" `
+            -DestinationPath "packaging\win\AssistedRegistration-v1.2.0-windows-x64.zip" -Force
+
+      - name: Upload to Release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release upload v1.2.0-macos-ui `
+            "packaging\win\AssistedRegistration-v1.2.0-windows-x64.zip" `
+            --repo ${{ github.repository }} --clobber
