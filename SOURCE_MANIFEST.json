@@ -12,8 +12,8 @@
     },
     {
       "path": ".gitignore",
-      "bytes": 511,
-      "sha256": "17d43ee2e1d7cc14c65f7868b207dc2bfae641e8132e9343106858f0bb7c3d7c"
+      "bytes": 522,
+      "sha256": "2440b5198e4ebafcc46e358489a17c25bfb34e0b56616deada73b45a19b87f2c"
     },
     {
       "path": "AssistedRegistration.pro",
@@ -367,8 +367,8 @@
     },
     {
       "path": "ui/electron/main.cjs",
-      "bytes": 5804,
-      "sha256": "5666697bf30279fdcb6e8245b1e95ff6a4996f4fba6a9382173e76085f85068f"
+      "bytes": 7098,
+      "sha256": "d8acc1bcf846bfff551ab9b0559441b2d54cc897e3a3a8bcdb341c241ec8d733"
     },
     {
       "path": "ui/electron/preload.cjs",

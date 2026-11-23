@@ -1,6 +1,7 @@
 # Local dependencies and build products
 node_modules/
 ui/dist/
+packaging/
 .wireit/
 build/
 build-*/

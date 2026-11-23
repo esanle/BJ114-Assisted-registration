@@ -2,8 +2,27 @@ const { app, BrowserWindow, ipcMain, shell, Notification } = require('electron')
 const { spawn, execFile } = require('node:child_process');
 const path = require('node:path');
 
-const PROJECT_ROOT = path.resolve(__dirname, '..', '..');
+// Find the directory that actually holds data/, runtime/ and bin/.
+// Packaged: app.getAppPath() = <Resources>/app (has them). Development: the
+// repo root (two levels up from ui/electron) has them.
+function findProjectRoot() {
+  const fs = require('node:fs');
+  const candidates = [
+    (app && app.getAppPath && app.getAppPath()),
+    path.resolve(__dirname, '..', '..'),
+    path.resolve(__dirname, '..', '..', '..')
+  ].filter(Boolean);
+  for (const c of candidates) if (fs.existsSync(path.join(c, 'data', 'hospitals.csv'))) return c;
+  return candidates[0] || path.resolve(__dirname, '..', '..');
+}
+const PROJECT_ROOT = findProjectRoot();
 const RPC_BIN = path.join(PROJECT_ROOT, 'bin', 'RegistrationRpc');
+// Diagnostic log for packaged builds (helps debug path issues without a console).
+try {
+  const fs = require('node:fs');
+  fs.appendFileSync(require('node:os').homedir() + '/bj114-ui-debug.log',
+    `[${new Date().toISOString()}] __dirname=${__dirname} PROJECT_ROOT=${PROJECT_ROOT} RPC_BIN=${RPC_BIN} exists=${fs.existsSync(RPC_BIN)}\n`);
+} catch { /* ignore */ }
 
 let rpc = null;
 let ready = false;
@@ -21,7 +40,12 @@ function startRpc() {
   const fixture = process.argv.includes('--fixture');
   const args = ['--root', PROJECT_ROOT];
   if (fixture) args.push('--fixture');
-  rpc = spawn(RPC_BIN, args, { cwd: PROJECT_ROOT, stdio: ['pipe', 'pipe', 'pipe'] });
+  // In a packaged app, point the backend to the bundled standalone Node binary
+  // so it does not depend on a Homebrew/PATH node on the user's machine.
+  const env = { ...process.env };
+  const bundledNode = path.join(PROJECT_ROOT, 'node', 'node');
+  if (require('node:fs').existsSync(bundledNode)) env.NODE_EXECUTABLE = bundledNode;
+  rpc = spawn(RPC_BIN, args, { cwd: PROJECT_ROOT, stdio: ['pipe', 'pipe', 'pipe'], env });
   rpc.stdout.setEncoding('utf8');
   rpc.stdout.on('data', (chunk) => {
     buffer += chunk;
