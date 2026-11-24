@@ -58,8 +58,14 @@ jobs:
       - name: Build React frontend
         shell: pwsh
         working-directory: ui
+        env:
+          ELECTRON_MIRROR: https://npmmirror.com/mirrors/electron/
         run: |
           npm ci
+          # npm's install-script allowlist can skip electron's binary download.
+          if (-not (Test-Path node_modules\electron\dist)) {
+            node node_modules\electron\install.js
+          }
           npm run build
 
       - name: Stage packaged app
