@@ -3,12 +3,17 @@
   "version": "1.2.0",
   "hash_strategy": "git_text_lf_sha256",
   "hash_description": "Git text blobs normalized to LF; binary image bytes preserved. Windows CRLF checkouts are normalized by the audit.",
-  "file_count": 808,
+  "file_count": 809,
   "files": [
     {
       "path": ".gitattributes",
       "bytes": 322,
       "sha256": "08960bef58041cd28af4d3a3760721268b717af328afdb8ee4cef3f6f89feb16"
+    },
+    {
+      "path": ".github/workflows/build-windows.yml",
+      "bytes": 4204,
+      "sha256": "f64a80d064baa6d76abcd8ae29d6e3665fe244564c18259cbc21e60d731a6918"
     },
     {
       "path": ".gitignore",
@@ -37,8 +42,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 15225,
-      "sha256": "d0337235bc3095acad0e553d9fe5310f621d10a4e2de6bb1e52065ab31156db3"
+      "bytes": 15781,
+      "sha256": "45563b4bfa23c0a2d142e10b676ea94b11f7785ac52d6ca9df20f521ad619947"
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",

@@ -119,6 +119,16 @@ Windows x64 完整运行包提供 Qt、Node 与所需依赖。完整解压并保
 
 CMake 已接入 `tests/` 下全部离线测试；非 Windows 平台的 GUI fixture 使用 `QT_QPA_PLATFORM=offscreen`，并包含 16 组并行查询调度变体（连接数 1/2/4/16 × 模式 detail/empty/mixed/fastdetail）。`build.cmd` / `run.cmd` 仍是 Windows 专用。
 
+### 预编译包下载(fork)
+
+GitHub Releases 提供 Electron + React 前端的预编译包(**不再包含 Qt GUI**),解压即用,内置 Node / Qt 运行库 / 医院目录:
+
+- **macOS (Apple Silicon)**:`AssistedRegistration-v1.2.0-macos-arm64.zip`
+- **Windows (x64)**:`AssistedRegistration-v1.2.0-windows-x64.zip`
+
+地址:https://github.com/esanle/BJ114-Assisted-registration/releases/tag/v1.2.0-macos-ui
+Windows 包由 `.github/workflows/build-windows.yml` 在 GitHub Actions 的 `windows-latest` runner 上自动构建(MSVC + Qt 5.15.2 + vcpkg curl)。
+
 ### Web UI 原型(Electron + React)
 
 `ui/` 目录下是一个新的 Web UI 原型,用于把原 Qt 单页界面拆成独立页面(账号登录、医院与科室、号源查询、挂号、设置)。它不替换现有 Qt 程序,而是通过本地 JSON-RPC 复用同一套已验证的 C++ 后端:
