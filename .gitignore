@@ -2,6 +2,7 @@
 node_modules/
 ui/dist/
 packaging/
+mobile-android/app/src/main/assets/app/
 .wireit/
 build/
 build-*/

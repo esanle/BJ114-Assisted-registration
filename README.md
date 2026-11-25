@@ -89,6 +89,13 @@ Node 运行时 (runtime/*.cjs)    jsdom 执行站点 JS 反爬脚本，网络 I/
 
 ---
 
+## 移动端（进行中）
+
+- `ui/src/styles.css` 已做响应式适配：窄屏下侧边栏变底部 Tab、字段堆叠、表格横滚、日历与弹窗自适应。同一套 React UI 可在手机浏览器或 WebView 中复用。
+- `mobile-android/` 是 Android 原生客户端骨架（WebView + Kotlin 后端抽象层），**尚未达到可用版本**。最大障碍是原反爬沙箱依赖 jsdom 与 V8 私有 intrinsic，Android（Rhino）无法逐字复刻，真实站点 challenge 很可能无法通过。详见 [mobile-android/README.md](mobile-android/README.md)。
+
+---
+
 ## 源码目录
 
 | 路径 | 内容 |
@@ -97,7 +104,8 @@ Node 运行时 (runtime/*.cjs)    jsdom 执行站点 JS 反爬脚本，网络 I/
 | `runtime/` | Node JSONL 运行时、公开请求头、兼容模块 |
 | `data/` | 公开医院 CSV 与科室目录快照 |
 | `ui/electron/` | Electron 主进程与 preload |
-| `ui/src/` | React 页面与组件 |
+| `ui/src/` | React 页面与组件（含响应式适配） |
+| `mobile-android/` | Android 原生客户端骨架（进行中） |
 | `vendor/jsdom/` | jsdom 31.0.0 源码及 MIT 许可 |
 | `tests/` | 31 个 C++ 离线回归测试（含 16 组并行调度变体） |
 | `.github/workflows/` | Windows 包自动化构建 |

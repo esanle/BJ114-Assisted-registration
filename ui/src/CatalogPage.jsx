@@ -78,8 +78,9 @@ export default function CatalogPage({ onQuery }) {
           <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="医院名称、地区或编码" style={{ maxWidth: 360 }} />
           <span className="badge">{filtered.length} 家</span>
         </div>
-        <div style={{ display: 'flex', gap: 16 }}>
-          <table className="grid" style={{ flex: 3 }}>
+        <div className="catalog-columns">
+          <div className="hospital-table">
+          <table className="grid" style={{ width: '100%' }}>
             <thead><tr><th>医院</th><th>编码</th><th>地区</th><th>等级</th></tr></thead>
             <tbody>
               {filtered.slice(0, 100).map((h) => {
@@ -94,7 +95,8 @@ export default function CatalogPage({ onQuery }) {
               })}
             </tbody>
           </table>
-          <div style={{ flex: 2 }}>
+          </div>
+          <div className="department-column">
             <b>科室</b>
             {state.departments.length === 0 ? (
               <div className="captcha-img" style={{ width: 'auto', height: 120, marginTop: 8 }}>请选择医院并加载科室</div>

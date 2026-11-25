@@ -3,7 +3,7 @@
   "version": "1.2.0",
   "hash_strategy": "git_text_lf_sha256",
   "hash_description": "Git text blobs normalized to LF; binary image bytes preserved. Windows CRLF checkouts are normalized by the audit.",
-  "file_count": 809,
+  "file_count": 824,
   "files": [
     {
       "path": ".gitattributes",
@@ -17,8 +17,8 @@
     },
     {
       "path": ".gitignore",
-      "bytes": 522,
-      "sha256": "2440b5198e4ebafcc46e358489a17c25bfb34e0b56616deada73b45a19b87f2c"
+      "bytes": 562,
+      "sha256": "4022bd9bdfd95ba271c1b2faae412b386d54991bb99b3ef0f2400a7db36c3846"
     },
     {
       "path": "AssistedRegistration.pro",
@@ -42,8 +42,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 8497,
-      "sha256": "f726bcca0bde6ac0f91a844a88cf11421a8073dda6ede42993a011bf0b07d383"
+      "bytes": 9170,
+      "sha256": "9d70aceea15380072da6f97d0a8d5fdb5a6478093753ddafa40956498b5e4163"
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",
@@ -74,6 +74,81 @@
       "path": "docs/免责协议.md",
       "bytes": 2755,
       "sha256": "b4a7f5b4100897d4a3f53340338243d92521296a42d6905aed74fd502f73610f"
+    },
+    {
+      "path": "mobile-android/README.md",
+      "bytes": 3305,
+      "sha256": "ea736d3beb6b049e4b8acc18b66fc53aa1d067c44c5ccae8be7b7dd3904a7b9c"
+    },
+    {
+      "path": "mobile-android/app/build.gradle.kts",
+      "bytes": 1245,
+      "sha256": "99abb1a54d44d098abb8ab992eae04374f1f25d05df12d4cf0df644c99565dcd"
+    },
+    {
+      "path": "mobile-android/app/src/main/AndroidManifest.xml",
+      "bytes": 908,
+      "sha256": "3b5bfc23e75fe93563d04a0dbd53d760540685ddd138384f09530daa7682375f"
+    },
+    {
+      "path": "mobile-android/app/src/main/assets/app/assets/index-BgfDg88-.js",
+      "bytes": 258185,
+      "sha256": "831a7f8d608b3d944debcf8b2f9eb31260fd61b5fcae19c242ceaebbb43a37c5"
+    },
+    {
+      "path": "mobile-android/app/src/main/assets/app/assets/index-CQ1og9rC.css",
+      "bytes": 7881,
+      "sha256": "61f6cceac2069bd0b8bd3bd46a5c4dfa56e61bbc8e2649a690d4682898b7a405"
+    },
+    {
+      "path": "mobile-android/app/src/main/assets/app/index.html",
+      "bytes": 428,
+      "sha256": "c8a9f2192e8c5bb5538e6640ddb7d71a44e10ad2f33487260ed38a37faa927a0"
+    },
+    {
+      "path": "mobile-android/app/src/main/java/com/hospitalbooking/assisted/js/Sandbox.kt",
+      "bytes": 2876,
+      "sha256": "3117e1482dea6fab28e7b6500690b08be1aed1f192babdcbe339d7cecb73ad42"
+    },
+    {
+      "path": "mobile-android/app/src/main/java/com/hospitalbooking/assisted/net/Transport.kt",
+      "bytes": 2524,
+      "sha256": "a4b25b6255786cbdcf5d56f2f5d3c70bf854b5c285ebc3af083762c38d5c7623"
+    },
+    {
+      "path": "mobile-android/app/src/main/java/com/hospitalbooking/assisted/ui/Backend.kt",
+      "bytes": 3521,
+      "sha256": "1510b9c21087d7e208ff17827b6de3c031a5586ae15c772ab153f896fdfa9a47"
+    },
+    {
+      "path": "mobile-android/app/src/main/java/com/hospitalbooking/assisted/ui/MainActivity.kt",
+      "bytes": 1664,
+      "sha256": "6d462e89f0976a28f32073ca954209c167342ea3d008b480f419d708ed444f63"
+    },
+    {
+      "path": "mobile-android/app/src/main/res/values/styles.xml",
+      "bytes": 343,
+      "sha256": "c6bc0f3efc2c9930c6ce7be0a02bef6de7c3586eb07754a29849cfaabe41d674"
+    },
+    {
+      "path": "mobile-android/app/src/main/res/xml/network_security.xml",
+      "bytes": 254,
+      "sha256": "dbc726438a7e99c69fdfc39146cd51ef8300dacb236843bbce3ecd2a1712a80f"
+    },
+    {
+      "path": "mobile-android/build.gradle.kts",
+      "bytes": 274,
+      "sha256": "c181e547af74b199a3fd593fd182ad1f7dde7556d208c159406a1a201a86fa56"
+    },
+    {
+      "path": "mobile-android/settings.gradle.kts",
+      "bytes": 338,
+      "sha256": "c7d5f2f43b18ba7ea913f4990cbb4ccc53d89f4a43afbb7ddc760a9f91ef5b58"
+    },
+    {
+      "path": "mobile-android/sync-assets.sh",
+      "bytes": 418,
+      "sha256": "d8015b4556f02bb9f2f92205add591a4e5cde26a842490485c30c166fb3e127a"
     },
     {
       "path": "package-lock.json",
@@ -356,19 +431,19 @@
       "sha256": "5ab3b9c853621fa4d2cc1f2137ab55cabe955c0ef99b7f0a3584051c86889f9a"
     },
     {
-      "path": "ui/dist/assets/index-CSRVhl5l.js",
-      "bytes": 258115,
-      "sha256": "f8a9f867de22167a29caba2d625775a357a0bc996f16b014b7538a3f2c308cbf"
+      "path": "ui/dist/assets/index-BgfDg88-.js",
+      "bytes": 258185,
+      "sha256": "831a7f8d608b3d944debcf8b2f9eb31260fd61b5fcae19c242ceaebbb43a37c5"
     },
     {
-      "path": "ui/dist/assets/index-DUwjggqS.css",
-      "bytes": 5833,
-      "sha256": "c32100809827795b8d693d04c49c8f93e898ec8813f061a7416782227bc65184"
+      "path": "ui/dist/assets/index-CQ1og9rC.css",
+      "bytes": 7881,
+      "sha256": "61f6cceac2069bd0b8bd3bd46a5c4dfa56e61bbc8e2649a690d4682898b7a405"
     },
     {
       "path": "ui/dist/index.html",
-      "bytes": 408,
-      "sha256": "33f76bc87727dff42166f06eab07acb43397b2cf8664ec9b509d615ace035c8d"
+      "bytes": 428,
+      "sha256": "c8a9f2192e8c5bb5538e6640ddb7d71a44e10ad2f33487260ed38a37faa927a0"
     },
     {
       "path": "ui/electron/main.cjs",
@@ -382,8 +457,8 @@
     },
     {
       "path": "ui/index.html",
-      "bytes": 308,
-      "sha256": "a30f0b7e66cc30d59b658b2e9d4bcfae52ab11b7203fa56998439187a57f42b8"
+      "bytes": 328,
+      "sha256": "e09fd0d0002ab17298c7bc4c11c2d8dbddb331b99184bfa296917ab3c8a74678"
     },
     {
       "path": "ui/package-lock.json",
@@ -407,8 +482,8 @@
     },
     {
       "path": "ui/src/CatalogPage.jsx",
-      "bytes": 5313,
-      "sha256": "4d545fa42af587e673fa15c30caa0f87e868a080dc15ac4d854d1b3271e7f219"
+      "bytes": 5380,
+      "sha256": "6b512b3c7e21088a82abc5f4f4cd3f9eeb4280e62dcb17151079661ff016a90a"
     },
     {
       "path": "ui/src/LoginPage.jsx",
@@ -442,8 +517,8 @@
     },
     {
       "path": "ui/src/styles.css",
-      "bytes": 6670,
-      "sha256": "f779c2d436568465ee11f1e16a99f7c695e91179d02887fc8c8568f233b1eff5"
+      "bytes": 9729,
+      "sha256": "c2a5b156929170bd67abe2a25f26ac6596c68efe46efe82205b446eb244fceea"
     },
     {
       "path": "ui/vite.config.js",
