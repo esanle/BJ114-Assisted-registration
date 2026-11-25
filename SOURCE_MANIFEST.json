@@ -3,7 +3,7 @@
   "version": "1.2.0",
   "hash_strategy": "git_text_lf_sha256",
   "hash_description": "Git text blobs normalized to LF; binary image bytes preserved. Windows CRLF checkouts are normalized by the audit.",
-  "file_count": 824,
+  "file_count": 841,
   "files": [
     {
       "path": ".gitattributes",
@@ -17,8 +17,8 @@
     },
     {
       "path": ".gitignore",
-      "bytes": 562,
-      "sha256": "4022bd9bdfd95ba271c1b2faae412b386d54991bb99b3ef0f2400a7db36c3846"
+      "bytes": 666,
+      "sha256": "175bdc1b964543d84e9356fdf482c3fde7676fbfdc31cf251e39788cd3e04331"
     },
     {
       "path": "AssistedRegistration.pro",
@@ -76,9 +76,84 @@
       "sha256": "b4a7f5b4100897d4a3f53340338243d92521296a42d6905aed74fd502f73610f"
     },
     {
+      "path": "mobile-android/.gradle/9.9.2/checksums/checksums.lock",
+      "bytes": 17,
+      "sha256": "2cd921b7edaaa3da3bc8990e6817fc23c8a7be1f323adf8e03ef46f93717987b"
+    },
+    {
+      "path": "mobile-android/.gradle/9.9.2/checksums/md5-checksums.bin",
+      "bytes": 35897,
+      "sha256": "577808ccd7078dc1f8fa6faa2594811ac432628b00b396ea333babfa252fa163"
+    },
+    {
+      "path": "mobile-android/.gradle/9.9.2/checksums/sha1-checksums.bin",
+      "bytes": 109856,
+      "sha256": "9ef49e8de4ec8d9c89cfa0bf5524839dc71bcf438bb5428afe8123a67a262949"
+    },
+    {
+      "path": "mobile-android/.gradle/9.9.2/executionHistory/executionHistory.bin",
+      "bytes": 664933,
+      "sha256": "2ca327c38f491c9e5286ceb5edd70fccda6d77e1813d8e78dd6bd2d4ec32bbf1"
+    },
+    {
+      "path": "mobile-android/.gradle/9.9.2/executionHistory/executionHistory.lock",
+      "bytes": 17,
+      "sha256": "dd7b7d78b02f30b8f310dcc07610df6e1784698d93d60c30d6dfe739a8ec927e"
+    },
+    {
+      "path": "mobile-android/.gradle/9.9.2/fileChanges/last-build.bin",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "mobile-android/.gradle/9.9.2/fileHashes/fileHashes.bin",
+      "bytes": 70765,
+      "sha256": "0f1a7637e42c9ee9aa97244f24b84a11a26dadca99bc269523c309103981bf8d"
+    },
+    {
+      "path": "mobile-android/.gradle/9.9.2/fileHashes/fileHashes.lock",
+      "bytes": 17,
+      "sha256": "2fe147f68bb4a39a6c56a2582db022406caeeb10ee87f2585b85d84c3f3fa51a"
+    },
+    {
+      "path": "mobile-android/.gradle/9.9.2/fileHashes/resourceHashesCache.bin",
+      "bytes": 18837,
+      "sha256": "0f1ccaa35b4c0ba0ccd3bab8d0d9f9f71f4af579fc2c29ddefa51dcf0a0db0d3"
+    },
+    {
+      "path": "mobile-android/.gradle/9.9.2/gc.properties",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "mobile-android/.gradle/9.9.2/kotlin-dsl-plugin-entries/kotlin-dsl-plugin-entries.lock",
+      "bytes": 17,
+      "sha256": "13cdde3a673b0ce89ce0728a2e14576f6f14b6255b36a3466fe58c1e3d0bce6e"
+    },
+    {
+      "path": "mobile-android/.gradle/buildOutputCleanup/buildOutputCleanup.lock",
+      "bytes": 17,
+      "sha256": "164bf67771f0c1d4d14bae7f1c22e9f9e4a77c75bb0b65c462166571922f9f19"
+    },
+    {
+      "path": "mobile-android/.gradle/buildOutputCleanup/cache.properties",
+      "bytes": 51,
+      "sha256": "77fc9bd3d614204e865309f71fe2e0c78f2f7e7b3c2d1aa9749aa049b049223b"
+    },
+    {
+      "path": "mobile-android/.gradle/buildOutputCleanup/outputFiles.bin",
+      "bytes": 22241,
+      "sha256": "b2e109542b73be93de692962ce9998df78f7d2a6c1311cbd77de93c7abb732b4"
+    },
+    {
+      "path": "mobile-android/.gradle/vcs-1/gc.properties",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
       "path": "mobile-android/README.md",
-      "bytes": 3305,
-      "sha256": "ea736d3beb6b049e4b8acc18b66fc53aa1d067c44c5ccae8be7b7dd3904a7b9c"
+      "bytes": 4038,
+      "sha256": "9b0e6a25b259e075f6c7e7305551e9517529b79deb448c4312efc75cc50f9344"
     },
     {
       "path": "mobile-android/app/build.gradle.kts",
@@ -141,9 +216,19 @@
       "sha256": "c181e547af74b199a3fd593fd182ad1f7dde7556d208c159406a1a201a86fa56"
     },
     {
+      "path": "mobile-android/gradle.properties",
+      "bytes": 131,
+      "sha256": "2ea3c4dea7c38ff8363e040a3fd194d2e6434202d250660c52a6665692e6775e"
+    },
+    {
+      "path": "mobile-android/local.properties",
+      "bytes": 53,
+      "sha256": "806fa7f1020ffc1c898e0963726b69b64b6be039eef2abbb198aa65ec646515c"
+    },
+    {
       "path": "mobile-android/settings.gradle.kts",
-      "bytes": 338,
-      "sha256": "c7d5f2f43b18ba7ea913f4990cbb4ccc53d89f4a43afbb7ddc760a9f91ef5b58"
+      "bytes": 920,
+      "sha256": "da20cc1c5312680af903c4f427fec546d4d9afd51a90f89a98b78dcd3a13faac"
     },
     {
       "path": "mobile-android/sync-assets.sh",

@@ -3,6 +3,10 @@ node_modules/
 ui/dist/
 packaging/
 mobile-android/app/src/main/assets/app/
+mobile-android/local.properties
+mobile-android/.gradle/
+mobile-android/app/build/
+mobile-android/build/
 .wireit/
 build/
 build-*/

@@ -29,18 +29,34 @@ React 前端已做响应式适配（`ui/src/styles.css` 的媒体查询），窄
 2. **协议逻辑**：`Backend.kt` 中 `captcha/sms/login/availability/preview/direct` 等目前是 stub，需把 `native_service.cpp`/`booking_service.cpp` 的数千行逻辑逐项转到 Kotlin。
 3. **Node 运行时**：`runtime/*.cjs` 依赖 `jsdom` / `whatwg-url` / `sm-crypto`，Android 上没有 Node，需移植到 Rhino/Java 等价物。
 4. **会话互通**：Android Keystore 与桌面 DPAPI/Keychain 不互通，移动端需独立登录，不能恢复桌面已保存的会话。
-5. **未构建验证**：本机没有 Android SDK/Gradle，Kotlin 仅做了语法级检查（无括号等语法错误），**尚未实际编译成 APK**。
+5. **后端逻辑仍是 stub**：`Backend.kt` 的 `captcha/login/availability/preview/direct` 等尚未实现真实流程，APK 能编译但查不到真实号源。
 
-## 构建（需 Android SDK）
+## 构建状态（已验证）
+
+本机用 Homebrew 安装的工具链已成功编译出可安装的 Debug APK：
+
 ```bash
+brew install --cask android-commandlinetools   # Android SDK
+brew install gradle                             # Gradle 9.9.2
+sdkmanager --sdk_root=/opt/homebrew/share/android-commandlinetools \
+  "platforms;android-35" "build-tools;35.0.0" "platform-tools"
+
 cd ui && npm run build && cd ..
-./mobile-android/sync-assets.sh
+./mobile-android/sync-assets.sh                 # 把 ui/dist 同步到 assets/app
 cd mobile-android
-# 需安装 Android SDK 35 与 JDK 17+，然后用 Android Studio 或：
-./gradlew assembleDebug
+# local.properties 指向 SDK 路径（本机已配，不入仓）
+gradle assembleDebug --no-daemon
+# 产物：app/build/outputs/apk/debug/app-debug.apk（约 5.3 MB）
 ```
 
-首次用 Gradle Wrapper 需生成 `gradle/wrapper/gradle-wrapper.jar`（用 `gradle wrapper` 命令），本仓库未提交该二进制。
+`settings.gradle.kts` 配置了阿里云/腾讯云 Maven 镜像，解决国内网络无法直连 `dl.google.com` 的 TLS 握手问题。
+
+> 注意：APK 编译成功只证明**骨架可构建**，不代表功能可用——后端逻辑仍是 stub，真实站点的反爬 challenge 也无法通过（见上）。
+
+## 安装到设备
+```bash
+adb install -r app/build/outputs/apk/debug/app-debug.apk
+```
 
 ## 结论
 移动端适配的**界面层已经可用**；原生后端的**完整移植仍在进行**，尤其是反爬沙箱在 Android 上缺少 V8/jsdom 等价实现，是当前最大的未解问题。若只需手机查看/演示，可先用响应式 Web UI（浏览器打开）；如需真实查询，建议等待后端移植完成或采用桌面后端局域网方案。
